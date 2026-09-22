@@ -112,10 +112,48 @@ p{
     100%{transform:scale(1);}
 }
 
+#bgVideo{
+  position:fixed;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+  top:0;
+  left:0;
+}
+.sound-btn-wrap{
+  position:fixed;
+  top:14px;
+  left:14px;
+  z-index:9999;
+}
+.sound-btn{
+  background:#FFD400;
+  color:#111;
+  border:none;
+  border-radius:999px;
+  padding:10px 16px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,0.35);
+}
+.sound-btn:hover{
+  transform:translateY(-1px);
+}
+
 </style>
 </head>
 
 <body>
+
+  <video id="bgVideo" autoplay muted loop playsinline preload="auto">
+    <source src="./Mission.mp4" type="video/mp4" />
+    הדפדפן שלך לא תומך בווידאו.
+  </video>
+
+  <div class="sound-btn-wrap">
+    <button id="soundBtn" class="sound-btn">🔊 הפעל סאונד</button>
+  </div>
 
 <div class="container">
 
@@ -171,6 +209,29 @@ Amazing Race Edition
 
 </div>
 </div>
+
+<script>
+  const video = document.getElementById('bgVideo');
+  const soundBtn = document.getElementById('soundBtn');
+
+  video.muted = true;
+  video.volume = 0;
+
+  video.play().catch((error) => {
+    console.warn('הפעלת הווידאו האוטומטית נחסמה:', error);
+  });
+
+  soundBtn.addEventListener('click', async () => {
+    try {
+      video.muted = false;
+      video.volume = 1;
+      await video.play();
+      soundBtn.textContent = '✅ הסאונד פועל';
+    } catch (error) {
+      soundBtn.textContent = '❌ לא ניתן להפעיל סאונד';
+    }
+  });
+</script>
 
 </body>
 </html>

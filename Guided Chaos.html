@@ -95,7 +95,6 @@
       100%{transform:scale(1);}
     }
 
-    /* הווידאו נשאר בדף אך מוסתר בצורה שלא מונעת autoplay בדפדפנים מסוימים */
     #bgVideo{
       position:fixed;
       width:1px;
@@ -128,7 +127,6 @@
 </head>
 <body>
 
-  <!-- הדפדפנים מאפשרים autoplay אוטומטי רק כשהווידאו מושתק -->
   <video id="bgVideo" autoplay muted loop playsinline preload="auto">
     <source src="./Mission.mp4" type="video/mp4" />
     הדפדפן שלך לא תומך בווידאו.
@@ -212,16 +210,13 @@
     const video = document.getElementById('bgVideo');
     const soundBtn = document.getElementById('soundBtn');
 
-    // מגדירים muted גם ב-JavaScript לפני ניסיון ההפעלה.
     video.muted = true;
     video.volume = 0;
 
-    // כך הווידאו יתחיל מיד, ללא סאונד, אם הדפדפן מאפשר autoplay.
     video.play().catch((error) => {
       console.warn('הפעלת הווידאו האוטומטית נחסמה:', error);
     });
 
-    // סאונד דורש פעולה של המשתמש בגלל מדיניות הדפדפנים.
     soundBtn.addEventListener('click', async () => {
       try {
         video.muted = false;
