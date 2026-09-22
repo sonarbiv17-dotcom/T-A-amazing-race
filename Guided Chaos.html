@@ -95,7 +95,16 @@
       100%{transform:scale(1);}
     }
 
-    /* כפתור הפעלת סאונד */
+    /* הווידאו נשאר בדף אך מוסתר בצורה שלא מונעת autoplay בדפדפנים מסוימים */
+    #bgVideo{
+      position:fixed;
+      width:1px;
+      height:1px;
+      opacity:0;
+      pointer-events:none;
+      top:0;
+      left:0;
+    }
     .sound-btn-wrap{
       position:fixed;
       top:14px;
@@ -119,24 +128,19 @@
 </head>
 <body>
 
-  <!-- MP4 שמתנגן אוטומטית (מוסתר) -->
-  <video id="bgVideo" autoplay muted loop playsinline style="display:none;">
-    <source src="Mission.mp4" type="video/mp4" />
+  <!-- הדפדפנים מאפשרים autoplay אוטומטי רק כשהווידאו מושתק -->
+  <video id="bgVideo" autoplay muted loop playsinline preload="auto">
+    <source src="./Mission.mp4" type="video/mp4" />
     הדפדפן שלך לא תומך בווידאו.
   </video>
 
-  <!-- כפתור להפעלת סאונד -->
   <div class="sound-btn-wrap">
     <button id="soundBtn" class="sound-btn">🔊 הפעל סאונד</button>
   </div>
 
   <div class="container">
-    <div class="logo">
-      מירוץ T&amp;A
-    </div>
-    <div class="subtitle">
-      Guided Chaos
-    </div>
+    <div class="logo">מירוץ T&amp;A</div>
+    <div class="subtitle">Guided Chaos</div>
     <div class="card">
       <p>
         מערכת הניווט של החברה קרסה לחלוטין.<br>
@@ -208,16 +212,23 @@
     const video = document.getElementById('bgVideo');
     const soundBtn = document.getElementById('soundBtn');
 
-    // ניסיון לנגן אוטומטית (מושתק)
-    video.play().catch(() => {});
+    // מגדירים muted גם ב-JavaScript לפני ניסיון ההפעלה.
+    video.muted = true;
+    video.volume = 0;
 
-    // לחיצה על הכפתור - מפעילה סאונד
+    // כך הווידאו יתחיל מיד, ללא סאונד, אם הדפדפן מאפשר autoplay.
+    video.play().catch((error) => {
+      console.warn('הפעלת הווידאו האוטומטית נחסמה:', error);
+    });
+
+    // סאונד דורש פעולה של המשתמש בגלל מדיניות הדפדפנים.
     soundBtn.addEventListener('click', async () => {
       try {
         video.muted = false;
+        video.volume = 1;
         await video.play();
         soundBtn.textContent = '✅ הסאונד פועל';
-      } catch (e) {
+      } catch (error) {
         soundBtn.textContent = '❌ לא ניתן להפעיל סאונד';
       }
     });
