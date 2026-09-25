@@ -15,7 +15,7 @@
     .map-card { overflow:auto; border-radius:14px; background:#fff; box-shadow:0 5px 20px #0f172a26; }
     .map-stage { position:relative; width:100%; min-width:520px; line-height:0; background:#dfece3; }
     .map-image { display:block; width:100%; height:auto; user-select:none; }
-    .station { position:absolute; z-index:2; width:31px; height:31px; display:grid; place-items:center; transform:translate(-50%,-100%); border:3px solid #fff; border-radius:50% 50% 50% 0; background:var(--orange); color:#fff; font-weight:700; cursor:pointer; box-shadow:0 2px 6px #0008; }
+    .station { position:absolute; z-index:2; width:31px; height:31px; display:grid; place-items:center; transform:translate(-50%,-100%); border:3px solid #fff; border-radius:50% 50% 50% 0; background:var(--orange); color:#fff; font-weight:700; box-shadow:0 2px 6px #0008; }
     .station::after { content:""; position:absolute; left:50%; bottom:-8px; width:8px; height:8px; transform:translateX(-50%) rotate(45deg); background:inherit; z-index:-1; }
     .station.finish { background:var(--finish); width:38px; height:38px; font-size:16px; animation:pulse 1.5s infinite; }
     .station.finish::before { content:"★"; position:absolute; top:-24px; color:#ffd400; font-size:20px; text-shadow:0 1px 2px #000; }
@@ -44,7 +44,7 @@
     <section class="map-card" aria-label="מפת המירוץ עם תחנות">
       <div id="map-stage" class="map-stage">
         <!-- קובץ המפה הקיים בריפו, ללא שימוש באריחי OpenStreetMap -->
-        <img class="map-image" src="./map.PNG" alt="מפת שלולית החורף בנתניה">
+        <img class="map-image" src="./map_last.png" alt="מפת שלולית החורף בנתניה">
       </div>
     </section>
 
@@ -52,7 +52,7 @@
       <h2>תחנות המירוץ (11)</h2>
       <p>לחצו על מספר התחנה או על הסמן במפה כדי לפתוח את המיקום ב-Google Maps.</p>
       <div id="station-list" class="station-list"></div>
-      <div class="note">הסמנים ממוקמים בשכבת HTML מעל התמונה. אם התמונה משתנה או נחתכת אחרת, אפשר לכוון את מיקום הסמנים בקוד.</div>
+      <div class="note">הסמנים ממוקמים בשכבת HTML מעל התמונה. אם התמונה משתנה או נחתכת אחרת, אפשר לכוון את מיקום הסמנים בקו־אופס.</div>
     </aside>
   </main>
 

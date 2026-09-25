@@ -12,7 +12,7 @@
   body{margin:0;background:#111;color:#fff;font-family:'Rubik',Arial,sans-serif}
 
   /* מסך פתיחה קומפקטי – כל הטקסט נכנס במסך אחד */
-  .intro{min-height:100svh;padding:10px 0 14px;background:linear-gradient(rgba(0,0,0,.82),rgba(0,0,0,.94)),url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1600&auto=format&fit=crop');background-size:cover;background-position:center}
+  .intro{min-height:100svh;padding:10px 0 14px;background:linear-gradient(rgba(0,0,0,.82),rgba(0,0,0,.94)),url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover no-repeat}
   .intro-inner{width:100%;max-width:600px;margin:auto;text-align:center}
   .logo{font-size:clamp(1.9rem,8vw,3rem);font-weight:900;color:var(--yellow);text-shadow:0 0 14px #ffd400d9;line-height:1.05}
   .subtitle{margin:3px 0 9px;color:#ff3030;font-size:clamp(1rem,4.5vw,1.5rem);font-weight:700}
@@ -31,7 +31,7 @@
   .map-card{max-width:1250px;margin:auto;overflow:auto;border-radius:12px;background:#fff;box-shadow:0 5px 20px #0f172a26}
   .map-stage{position:relative;width:100%;min-width:520px;line-height:0;background:#dfece3}
   .map-image{display:block;width:100%;height:auto;user-select:none}
-  .station{position:absolute;z-index:2;width:31px;height:31px;display:grid;place-items:center;transform:translate(-50%,-100%);border:3px solid #fff;border-radius:50% 50% 50% 0;background:var(--orange);color:#fff;font:700 13px Arial,sans-serif;cursor:pointer;box-shadow:0 2px 6px #0008}
+  .station{position:absolute;z-index:2;width:31px;height:31px;display:grid;place-items:center;transform:translate(-50%,-100%);border:3px solid #fff;border-radius:50% 50% 50% 0;background:var(--orange);color:#fff;font-weight:700;box-shadow:0 2px 6px #0008}
   .station::after{content:"";position:absolute;left:50%;bottom:-8px;width:8px;height:8px;transform:translateX(-50%) rotate(45deg);background:inherit;z-index:-1}
   .station.finish{width:38px;height:38px;background:var(--finish);font-size:16px;animation:pulse-map 1.5s infinite}
   .station.finish::before{content:"★";position:absolute;top:-24px;color:var(--yellow);font-size:20px;text-shadow:0 1px 2px #000}
@@ -46,7 +46,7 @@
   .station-name{font-size:.82rem;font-weight:700}.coords{display:block;direction:ltr;color:#64748b;font-size:.62rem}
   .note{margin-top:8px;padding:7px;border-radius:7px;background:#fff7ed;color:#9a3412;font-size:.7rem}
   #bgVideo{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:0;left:0}
-  .sound-btn-wrap{position:fixed;top:8px;left:8px;z-index:9999}.sound-btn{padding:6px 9px;border:0;border-radius:999px;background:var(--yellow);color:#111;font:700 .7rem 'Rubik',sans-serif;cursor:pointer;box-shadow:0 4px 12px #00000059}
+  .sound-btn-wrap{position:fixed;top:8px;left:8px;z-index:9999}.sound-btn{padding:6px 9px;border:0;border-radius:999px;background:var(--yellow);color:#111;font:700 .7rem 'Rubik',sans-serif;cursor:pointer;box-shadow:0 5px 10px rgba(0,0,0,.2)}
   @keyframes pulse-map{0%,100%{box-shadow:0 2px 6px #0008,0 0 0 0 #c6282866}70%{box-shadow:0 2px 6px #0008,0 0 0 12px transparent}}
 </style>
 </head>
@@ -74,7 +74,7 @@
   </section>
 
   <section class="map-section" aria-label="מפת המירוץ">
-    <div class="map-card"><div id="map-stage" class="map-stage"><img class="map-image" src="./map.PNG" alt="מפת שלולית החורף בנתניה"></div></div>
+    <div class="map-card"><div id="map-stage" class="map-stage"><img class="map-image" src="./map_last.png" alt="מפת שלולית החורף בנתניה"></div></div>
     <aside class="stations-panel" aria-label="רשימת התחנות">
       <h2>תחנות המירוץ (11)</h2>
       <p>לחצו על מספר התחנה או על הסמן במפה כדי לפתוח את המיקום ב-Google Maps.</p>
@@ -91,7 +91,7 @@
     {name:'Pipeline',lat:32.290844,lng:34.843266,x:56,y:43},{name:'Antenna Recovery',lat:32.290249,lng:34.843910,x:64,y:66},{name:'The Split Protocol',lat:32.290150,lng:34.844116,x:70,y:72},{name:'The Human Plotter',lat:32.291771,lng:34.843098,x:42,y:16},{name:'The Code Sequence',lat:32.290646,lng:34.843346,x:58,y:50},{name:'Human Bug',lat:32.291157,lng:34.842754,x:29,y:48},{name:'Guided Chaos',lat:32.291679,lng:34.842728,x:28,y:24},{name:'THE DETOUR',lat:32.291454,lng:34.842796,x:30,y:34},{name:'Echo Transmission',lat:32.291687,lng:34.842827,x:31,y:22},{name:'The Cipher Chain',lat:32.290604,lng:34.842987,x:45,y:53},{name:'Final Release',lat:32.290211,lng:34.843166,x:52,y:74,finish:true}
   ];
   const stage=document.getElementById('map-stage'),list=document.getElementById('station-list');
-  stations.forEach((s,i)=>{const n=i+1,url=`https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}`;const marker=document.createElement('button');marker.type='button';marker.className=`station${s.finish?' finish':''}`;marker.style.left=`${s.x}%`;marker.style.top=`${s.y}%`;marker.textContent=s.finish?'★':n;marker.title=`${n}. ${s.name}`;marker.setAttribute('aria-label',`${n}. ${s.name}, פתיחה ב-Google Maps`);marker.onclick=()=>window.open(url,'_blank','noopener,noreferrer');stage.appendChild(marker);const row=document.createElement('button');row.type='button';row.className=`station-button${s.finish?' finish-row':''}`;row.innerHTML=`<span class="number">${n}</span><span><span class="station-name">${s.name}${s.finish?' 🏁':''}</span><span class="coords">${s.lat}, ${s.lng}</span></span>`;row.onclick=()=>window.open(url,'_blank','noopener,noreferrer');list.appendChild(row)});
+  stations.forEach((s,i)=>{const n=i+1,url=`https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}`;const marker=document.createElement('button');marker.type='button';marker.className=`station${s.finish?' finish':''}`;marker.style.left=`${s.x}%`;marker.style.top=`${s.y}%`;marker.title=`${n}. ${s.name} — פתיחה ב-Google Maps`;marker.setAttribute('aria-label',`${n}. ${s.name}, פתיחה ב-Google Maps`);marker.textContent=s.finish?'★':n;marker.addEventListener('click',()=>{marker.animate([{transform:'translate(-50%,-100%) scale(1)'},{transform:'translate(-50%,-100%) scale(1.25)'},{transform:'translate(-50%,-100%) scale(1)'}],{duration:450});window.open(url,'_blank','noopener,noreferrer')});stage.appendChild(marker);const row=document.createElement('button');row.type='button';row.className=`station-button${s.finish?' finish-row':''}`;row.innerHTML=`<span class="number">${n}</span><span><span class="station-name">${s.name}${s.finish?' 🏁':''}</span><span class="coords">${s.lat}, ${s.lng}</span></span>`;row.title='פתיחה ב-Google Maps';row.addEventListener('click',()=>window.open(url,'_blank','noopener,noreferrer'));list.appendChild(row)});
 </script>
 </body>
 </html>
