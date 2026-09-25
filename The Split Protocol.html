@@ -6,48 +6,15 @@
 <title>מירוץ T&amp;A - The Split Protocol</title>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-html, body {
-  margin: 0;
-  min-height: 100%;
-  overflow-x: hidden;
-}
-body{
-    margin:0;
-    font-family:'Rubik',sans-serif;
-    background:linear-gradient(rgba(0,0,0,0.84),rgba(0,0,0,0.90)),url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?q=80&w=1600&auto=format&fit=crop');
-    background-size:cover;
-    background-position:center;
-    color:white;
-    min-height:100vh;
-}
-.container{max-width:900px;margin:auto;padding:10px 18px 14px;}
-.logo{text-align:center;font-size:28px;font-weight:900;color:#FFD400;text-shadow:0 0 18px rgba(255,212,0,0.9);margin-bottom:4px;}
-.subtitle{text-align:center;color:#ff3c3c;font-size:18px;font-weight:700;margin-bottom:8px;}
-.card{background:rgba(20,20,20,0.90);border:2px solid #FFD400;border-radius:12px;padding:12px 16px;box-shadow:0 0 20px rgba(255,0,0,0.35);}
-p{font-size:12px;line-height:1.35;margin:6px 0;}
-.highlight{color:#FFD400;font-weight:700;}
-.rules{margin-top:8px;background:#111;border-right:4px solid #ff2e2e;padding:8px 10px;border-radius:10px;}
-.rules h2{color:#FFD400;margin:0 0 4px;font-size:14px;}
-.rules ul{margin:0;padding-right:18px;}
-.rules li{margin-bottom:3px;font-size:12px;line-height:1.3;}
-.goal{margin-top:10px;text-align:center;font-size:19px;font-weight:900;color:#ff4747;}
-.footer{margin-top:8px;text-align:center;color:#bbb;font-size:11px;}
-.warning{margin-top:8px;background:#2a0000;border:1px solid #ff2e2e;padding:7px;border-radius:8px;text-align:center;font-size:12px;font-weight:bold;color:#FFD400;animation:pulse 1.5s infinite;}
-@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.01)}100%{transform:scale(1)}}
-#bgVideo{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:0;left:0;}
-.sound-btn-wrap{position:fixed;top:10px;left:10px;z-index:9999;}
-.sound-btn{background:#FFD400;color:#111;border:none;border-radius:999px;padding:7px 10px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.35);font-size:11px;}
-.sound-btn:hover{transform:translateY(-1px);}
-@media (max-width:600px){
- .container{padding:8px 10px 0;}.logo{font-size:24px;}.subtitle{font-size:16px;}.card{padding:10px 12px;border-radius:10px;}p{font-size:11px;line-height:1.3;margin:5px 0;}.goal{font-size:16px;}.warning{font-size:11px;padding:6px;}.rules{padding:7px 8px;}.rules h2{font-size:13px;}.rules li{font-size:11px;}
-}
-@media print{
- @page{size:A4;margin:6mm;}html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;min-height:0!important;height:auto!important;overflow:auto!important;}body{margin:0!important;padding:0!important;}.container{max-width:100%!important;padding:2mm 5mm!important;margin:0 auto!important;}.card{padding:10px 14px!important;box-shadow:none!important;border-radius:12px!important;break-inside:avoid!important;}.logo{font-size:26px!important;margin-bottom:2px!important;text-shadow:none!important;}.subtitle{font-size:16px!important;margin-bottom:8px!important;}p{font-size:11.5px!important;line-height:1.3!important;margin:4px 0!important;}.rules{margin-top:8px!important;padding:8px 10px!important;break-inside:avoid!important;}.rules h2{font-size:14px!important;margin-bottom:4px!important;}.rules li{font-size:11px!important;margin-bottom:3px!important;line-height:1.3!important;}.goal{margin-top:8px!important;font-size:15px!important;break-inside:avoid!important;}.warning{margin-top:8px!important;padding:8px!important;font-size:11.5px!important;animation:none!important;break-inside:avoid!important;}.footer{margin-top:8px!important;font-size:10px!important;}.sound-btn-wrap,#bgVideo{display:none!important;}br{line-height:1!important;}
-}
+html,body{margin:0;min-height:100%;overflow-x:hidden}
+body{font-family:'Rubik',sans-serif;background:linear-gradient(rgba(0,0,0,.84),rgba(0,0,0,.90)),url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?q=80&w=1600&auto=format&fit=crop');background-size:cover;background-position:center;color:#fff;min-height:100vh}
+.container{max-width:900px;margin:auto;padding:10px 18px 14px}.logo{text-align:center;font-size:28px;font-weight:900;color:#FFD400;text-shadow:0 0 18px rgba(255,212,0,.9);margin-bottom:4px}.subtitle{text-align:center;color:#ff3c3c;font-size:18px;font-weight:700;margin-bottom:8px}.card{background:rgba(20,20,20,.90);border:2px solid #FFD400;border-radius:12px;padding:12px 16px;box-shadow:0 0 20px rgba(255,0,0,.35)}p{font-size:12px;line-height:1.35;margin:6px 0}.highlight{color:#FFD400;font-weight:700}.rules{margin-top:8px;background:#111;border-right:4px solid #ff2e2e;padding:8px 10px;border-radius:10px}.rules h2{color:#FFD400;margin:0 0 4px;font-size:14px}.rules ul{margin:0;padding-right:18px}.rules li{margin-bottom:3px;font-size:12px;line-height:1.3}.goal{margin-top:10px;text-align:center;font-size:19px;font-weight:900;color:#ff4747}.footer{margin-top:8px;padding-top:5px;border-top:1px solid #555;text-align:center;color:#FFD400;font-size:12px;line-height:1.35;font-weight:700}.warning{margin-top:8px;background:#2a0000;border:1px solid #ff2e2e;padding:7px;border-radius:8px;text-align:center;font-size:12px;font-weight:700;color:#FFD400;animation:pulse 1.5s infinite}@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.01)}100%{transform:scale(1)}}#bgVideo{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:0;left:0}.sound-btn-wrap{position:fixed;top:10px;left:10px;z-index:9999}.sound-btn{background:#FFD400;color:#111;border:0;border-radius:999px;padding:7px 10px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.35);font-size:11px}.sound-btn:hover{transform:translateY(-1px)}
+@media(max-width:600px){.container{padding:8px 10px 0}.logo{font-size:24px}.subtitle{font-size:16px}.card{padding:10px 12px;border-radius:10px}p{font-size:11px;line-height:1.3;margin:5px 0}.goal{font-size:16px;margin-top:8px}.warning{font-size:11px;padding:6px}.rules{padding:7px 8px}.rules h2{font-size:13px}.rules li{font-size:11px}.footer{font-size:11px}}
+@media print{@page{size:A4;margin:6mm}html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;min-height:0!important;height:auto!important;overflow:auto!important}body{margin:0!important;padding:0!important}.container{max-width:100%!important;padding:2mm 5mm!important;margin:0 auto!important}.card{padding:10px 14px!important;box-shadow:none!important;border-radius:12px!important;break-inside:avoid!important}.logo{font-size:26px!important;margin-bottom:2px!important;text-shadow:none!important}.subtitle{font-size:16px!important;margin-bottom:8px!important}p{font-size:11.5px!important;line-height:1.3!important;margin:4px 0!important}.rules{margin-top:8px!important;padding:8px 10px!important}.rules h2{font-size:14px!important;margin-bottom:4px!important}.rules li{font-size:11px!important;margin-bottom:3px!important;line-height:1.3!important}.goal{margin-top:8px!important;font-size:15px!important}.warning{margin-top:8px!important;padding:8px!important;font-size:11.5px!important;animation:none!important}.footer{margin-top:8px!important;padding-top:4px!important;font-size:10px!important}.sound-btn-wrap,#bgVideo{display:none!important}br{line-height:1!important}}
 </style>
 </head>
 <body>
-<video id="bgVideo" autoplay muted loop playsinline preload="auto"><source src="./Mission.mp4" type="video/mp4" />הדפדפן שלך לא תומך בווידאו.</video>
+<video id="bgVideo" autoplay muted loop playsinline preload="auto"><source src="./Mission.mp4" type="video/mp4">הדפדפן שלך לא תומך בווידאו.</video>
 <div class="sound-btn-wrap"><button id="soundBtn" class="sound-btn">🔊 הפעל סאונד</button></div>
 <div class="container">
 <div class="logo">מירוץ T&amp;A</div>
@@ -66,7 +33,7 @@ p{font-size:12px;line-height:1.35;margin:6px 0;}
 </div>
 </div>
 <script>
-const video=document.getElementById('bgVideo');const soundBtn=document.getElementById('soundBtn');video.muted=true;video.volume=0;video.play().catch(error=>console.warn('הפעלת הווידאו האוטומטית נחסמה:',error));soundBtn.addEventListener('click',async()=>{try{video.muted=false;video.volume=1;await video.play();soundBtn.textContent='✅ הסאונד פועל';}catch(error){soundBtn.textContent='❌ לא ניתן להפעיל סאונד';}});
+const video=document.getElementById('bgVideo');const soundBtn=document.getElementById('soundBtn');video.muted=true;video.volume=0;video.play().catch(error=>console.warn('הפעלת הווידאו האוטומטית נחסמה:',error));soundBtn.addEventListener('click',async()=>{try{video.muted=false;video.volume=1;await video.play();soundBtn.textContent='✅ הסאונד פועל'}catch(error){soundBtn.textContent='❌ לא ניתן להפעיל סאונד'}})
 </script>
 </body>
 </html>
