@@ -15,7 +15,7 @@
     .map-card { overflow:auto; border-radius:14px; background:#fff; box-shadow:0 5px 20px #0f172a26; }
     .map-stage { position:relative; width:100%; min-width:520px; line-height:0; background:#dfece3; }
     .map-image { display:block; width:100%; height:auto; user-select:none; }
-    .station { position:absolute; z-index:2; width:31px; height:31px; display:grid; place-items:center; transform:translate(-50%,-100%); border:3px solid #fff; border-radius:50% 50% 50% 0; background:var(--orange); color:#fff; box-shadow:0 2px 6px #0008; font-weight:700; line-height:1; cursor:pointer; }
+    .station { position:absolute; z-index:2; width:31px; height:31px; display:grid; place-items:center; transform:translate(-50%,-100%); border:3px solid #fff; border-radius:50% 50% 50% 0; background:var(--orange); color:#fff; font-weight:700; cursor:pointer; box-shadow:0 2px 6px #0008; }
     .station::after { content:""; position:absolute; left:50%; bottom:-8px; width:8px; height:8px; transform:translateX(-50%) rotate(45deg); background:inherit; z-index:-1; }
     .station.finish { background:var(--finish); width:38px; height:38px; font-size:16px; animation:pulse 1.5s infinite; }
     .station.finish::before { content:"★"; position:absolute; top:-24px; color:#ffd400; font-size:20px; text-shadow:0 1px 2px #000; }
@@ -50,9 +50,9 @@
 
     <aside class="side-panel" aria-label="רשימת התחנות">
       <h2>תחנות המירוץ (11)</h2>
-      <p>כל הסמנים מוצגים מעל התמונה. תחנת הסיום מסומנת באדום ובכוכב.</p>
+      <p>לחצו על מספר התחנה או על הסמן במפה כדי לפתוח את המיקום ב-Google Maps.</p>
       <div id="station-list" class="station-list"></div>
-      <div class="note">הסמנים ממוקמים בשכבת HTML מעל התמונה. אם התמונה משתנה או נחתכת אחרת, אפשר לכוון את מיקום הסמנים בקלות לפי האחוזים בקוד.</div>
+      <div class="note">הסמנים ממוקמים בשכבת HTML מעל התמונה. אם התמונה משתנה או נחתכת אחרת, אפשר לכוון את מיקום הסמנים בקוד.</div>
     </aside>
   </main>
 
@@ -76,16 +76,18 @@
 
     stations.forEach((station, index) => {
       const number = index + 1;
+      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${station.lat},${station.lng}`;
       const marker = document.createElement('button');
       marker.type = 'button';
       marker.className = `station${station.finish ? ' finish' : ''}`;
       marker.style.left = `${station.x}%`;
       marker.style.top = `${station.y}%`;
-      marker.title = `${number}. ${station.name}`;
-      marker.setAttribute('aria-label', `${number}. ${station.name}`);
+      marker.title = `${number}. ${station.name} — פתיחה ב-Google Maps`;
+      marker.setAttribute('aria-label', `${number}. ${station.name}, פתיחה ב-Google Maps`);
       marker.textContent = station.finish ? '★' : number;
       marker.addEventListener('click', () => {
         marker.animate([{ transform:'translate(-50%,-100%) scale(1)' }, { transform:'translate(-50%,-100%) scale(1.25)' }, { transform:'translate(-50%,-100%) scale(1)' }], { duration:450 });
+        window.open(mapsUrl, '_blank', 'noopener,noreferrer');
       });
       stage.appendChild(marker);
 
@@ -93,7 +95,8 @@
       row.type = 'button';
       row.className = `station-button${station.finish ? ' finish-row' : ''}`;
       row.innerHTML = `<span class="number">${number}</span><span><span class="station-name">${station.name}${station.finish ? ' 🏁' : ''}</span><span class="coords">${station.lat}, ${station.lng}</span></span>`;
-      row.addEventListener('click', () => marker.click());
+      row.title = 'פתיחה ב-Google Maps';
+      row.addEventListener('click', () => window.open(mapsUrl, '_blank', 'noopener,noreferrer'));
       list.appendChild(row);
     });
   </script>
