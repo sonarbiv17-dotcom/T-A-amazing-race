@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מירוץ T&A - Guided Chaos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    body{
+      margin:0;
+      font-family:'Rubik',sans-serif;
+      background:
+      linear-gradient(rgba(0,0,0,0.84), rgba(0,0,0,0.92)),
+      url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop');
+      background-size:cover;
+      background-position:center;
+      color:white;
+      min-height:100vh;
+    }
+    .container{
+      max-width:820px;
+      margin:auto;
+      padding:12px 20px 16px;
+    }
+    .logo{
+      text-align:center;
+      font-size:32px;
+      font-weight:900;
+      color:#FFD400;
+      text-shadow:0 0 18px rgba(255,212,0,0.9);
+      margin-bottom:3px;
+    }
+    .subtitle{
+      text-align:center;
+      color:#ff3c3c;
+      font-size:17px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+    .card{
+      background:rgba(20,20,20,0.90);
+      border:3px solid #FFD400;
+      border-radius:16px;
+      padding:16px 20px;
+      box-shadow:0 0 30px rgba(255,0,0,0.35);
+    }
+    p{
+      font-size:13px;
+      line-height:1.35;
+      margin:5px 0;
+    }
+    .rules{
+      margin-top:10px;
+      background:#111;
+      border-right:6px solid #ff2e2e;
+      padding:10px 14px;
+      border-radius:12px;
+    }
+    .rules h2{
+      color:#FFD400;
+      margin-top:0;
+      margin-bottom:6px;
+      font-size:16px;
+    }
+    .rules li{
+      margin-bottom:4px;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .goal{
+      margin-top:10px;
+      text-align:center;
+      font-size:16px;
+      font-weight:900;
+      color:#ff4747;
+    }
+    .warning{
+      margin-top:10px;
+      background:#2a0000;
+      border:2px solid #ff2e2e;
+      padding:10px;
+      border-radius:12px;
+      text-align:center;
+      font-size:13px;
+      font-weight:bold;
+      color:#FFD400;
+      animation:pulse 1.5s infinite;
+    }
+    .footer{
+      margin-top:10px;
+      text-align:center;
+      color:#bbb;
+      font-size:12px;
+    }
+    @keyframes pulse{
+      0%{transform:scale(1);}
+      50%{transform:scale(1.02);}
+      100%{transform:scale(1);}
+    }
+
+    #bgVideo{
+      position:fixed;
+      width:1px;
+      height:1px;
+      opacity:0;
+      pointer-events:none;
+      top:0;
+      left:0;
+    }
+    .sound-btn-wrap{
+      position:fixed;
+      top:14px;
+      left:14px;
+      z-index:9999;
+    }
+    .sound-btn{
+      background:#FFD400;
+      color:#111;
+      border:none;
+      border-radius:999px;
+      padding:10px 16px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(0,0,0,0.35);
+    }
+    .sound-btn:hover{
+      transform:translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+  <video id="bgVideo" autoplay muted loop playsinline preload="auto">
+    <source src="./Mission.mp4" type="video/mp4" />
+    הדפדפן שלך לא תומך בווידאו.
+  </video>
+
+  <div class="sound-btn-wrap">
+    <button id="soundBtn" class="sound-btn">🔊 הפעל סאונד</button>
+  </div>
+
+  <div class="container">
+    <div class="logo">מירוץ T&amp;A</div>
+    <div class="subtitle">Guided Chaos</div>
+    <div class="card">
+      <p>
+        מערכת הניווט של החברה קרסה לחלוטין.<br>
+        אין GPS.<br>
+        אין מסכים.<br>
+        אין קשר עין.<br>
+        ואיכשהו… גם אין אף אחד שממש יודע להסביר לאן הולכים 😅
+      </p>
+      <p>
+        בשטח פוזרו 10 דגלי מירוץ המכילים חלקי מידע קריטיים.<br>
+        הבעיה?<br>
+        חצי מהצוות לא רואה כלום,
+        והחצי השני קשור אחד לשני כמו משלחת בית ספר שיצאה משליטה.
+      </p>
+      <p>
+        הדרך היחידה לנווט: משרוקית.<br>
+        מה כבר יכול להשתבש 💀
+      </p>
+
+      <div class="goal">
+        🎯 המשימה<br><br>
+        עליכם לאסוף 10 דגלי מירוץ המפוזרים בשטח.<br><br>
+        • הצוות המכוסה ינוע רק לפי קוד השריקות<br>
+        • שרשרת העוזרים תנוע כשהיא קשורה ברגליים<br>
+        • כל הדגלים חייבים להגיע למפעיל
+      </div>
+
+      <div class="rules">
+        <h2>🎼 קוד המשרוקית</h2>
+        <ul>
+          <li>שריקה קצרה אחת = קדימה</li>
+          <li>שתי שריקות קצרות = עצירה</li>
+          <li>שריקה ארוכה אחת = ימינה</li>
+          <li>שתי שריקות ארוכות = שמאלה</li>
+          <li>שלוש שריקות קצרות = אחורה</li>
+          <li>שריקה קצרה + ארוכה = שינוי כיוון</li>
+        </ul>
+      </div>
+
+      <div class="rules">
+        <h2>📏 חוקים ופסילות</h2>
+        <ul>
+          <li>אסור לדבר עם הצוות המכוסה</li>
+          <li>אסור להוריד כיסוי עיניים</li>
+          <li>שרשרת העוזרים חייבת להישאר מחוברת כל הזמן</li>
+        </ul>
+      </div>
+
+      <div class="warning">
+        🚫 הורדת כיסוי עיניים = הדגל האחרון חוזר למקומו<br>
+        🚫 ניתוק השרשרת = עצירת מערכת ל־15 שניות
+      </div>
+
+      <div class="footer">
+        בהצלחה צוות.<br>
+        תנסו לא להפוך את השריקות לקרב צעקות 😈
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById('bgVideo');
+    const soundBtn = document.getElementById('soundBtn');
+
+    video.muted = true;
+    video.volume = 0;
+
+    video.play().catch((error) => {
+      console.warn('הפעלת הווידאו האוטומטית נחסמה:', error);
+    });
+
+    soundBtn.addEventListener('click', async () => {
+      try {
+        video.muted = false;
+        video.volume = 1;
+        await video.play();
+        soundBtn.textContent = '✅ הסאונד פועל';
+      } catch (error) {
+        soundBtn.textContent = '❌ לא ניתן להפעיל סאונד';
+      }
+    });
+  </script>
+
+</body>
+</html>
