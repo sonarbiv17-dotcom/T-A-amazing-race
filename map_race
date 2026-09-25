@@ -3,103 +3,99 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>T&amp;A Amazing Race — מפת תחנות</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <title>T&amp;A Amazing Race — מפה סטטית</title>
   <style>
-    :root { --dark:#143642; --teal:#087e8b; --orange:#e85d04; --muted:#64748b; }
+    :root { --orange:#e85d04; --finish:#c62828; --dark:#143642; }
     * { box-sizing:border-box; }
-    body { margin:0; font-family:Arial,"Noto Sans Hebrew",sans-serif; background:#edf3f6; color:#172033; }
-    header { padding:18px 22px; color:white; background:linear-gradient(135deg,var(--dark),var(--teal)); box-shadow:0 2px 12px #0003; }
-    h1 { margin:0 0 5px; font-size:clamp(1.4rem,3vw,2.1rem); }
+    body { margin:0; color:#172033; font-family:Arial,"Noto Sans Hebrew",sans-serif; background:#edf3f6; }
+    header { padding:18px 22px; color:#fff; background:linear-gradient(135deg,var(--dark),#087e8b); box-shadow:0 2px 12px #0003; }
+    h1 { margin:0 0 5px; font-size:clamp(1.35rem,3vw,2rem); }
     header p { margin:0; opacity:.9; }
-    .layout { position:relative; }
-    #map { width:100%; height:calc(100vh - 94px); min-height:520px; }
-    .legend { position:absolute; z-index:1000; top:16px; right:16px; width:min(350px,calc(100% - 32px)); max-height:calc(100vh - 130px); overflow:auto; padding:14px; border-radius:12px; background:#fffffff5; box-shadow:0 6px 22px #0f172a33; }
-    .legend h2 { margin:0 0 7px; font-size:1.12rem; }
-    .legend p { margin:0 0 10px; color:var(--muted); font-size:.9rem; }
-    .point-list { display:grid; gap:5px; }
-    .point-button { display:flex; align-items:center; gap:10px; width:100%; padding:7px; border:0; border-radius:8px; background:transparent; color:#172033; text-align:right; cursor:pointer; }
-    .point-button:hover,.point-button:focus { background:#edf5f6; outline:0; }
-    .num { display:grid; place-items:center; flex:0 0 28px; width:28px; height:28px; border-radius:50%; background:var(--orange); color:#fff; font-weight:bold; }
-    .point-text { display:flex; flex-direction:column; min-width:0; }
-    .point-name { font-weight:bold; line-height:1.2; }
-    .coords { direction:ltr; color:var(--muted); font-size:.72rem; white-space:nowrap; }
-    .race-marker { display:grid; place-items:center; width:32px; height:32px; border:3px solid white; border-radius:50% 50% 50% 0; background:var(--orange); color:#fff; box-shadow:0 2px 5px #0006; transform:rotate(-45deg); font-weight:bold; }
-    .race-marker span { transform:rotate(45deg); }
-    .popup-title { margin:0 0 5px; font-size:1rem; }
-    .popup-coords { direction:ltr; color:var(--muted); font-size:.8rem; margin-bottom:6px; }
-    .popup-link { color:var(--teal); font-weight:bold; text-decoration:none; }
-    @media (max-width:700px) { .legend { top:10px; right:10px; width:min(300px,calc(100% - 20px)); padding:11px; } }
+    .layout { display:grid; grid-template-columns:minmax(0,1fr) 310px; gap:14px; align-items:start; max-width:1250px; margin:auto; padding:14px; }
+    .map-card { overflow:auto; border-radius:14px; background:#fff; box-shadow:0 5px 20px #0f172a26; }
+    .map-stage { position:relative; width:100%; min-width:520px; line-height:0; background:#dfece3; }
+    .map-image { display:block; width:100%; height:auto; user-select:none; }
+    .station { position:absolute; z-index:2; width:31px; height:31px; display:grid; place-items:center; transform:translate(-50%,-100%); border:3px solid #fff; border-radius:50% 50% 50% 0; background:var(--orange); color:#fff; box-shadow:0 2px 6px #0008; font-weight:700; line-height:1; cursor:pointer; }
+    .station::after { content:""; position:absolute; left:50%; bottom:-8px; width:8px; height:8px; transform:translateX(-50%) rotate(45deg); background:inherit; z-index:-1; }
+    .station.finish { background:var(--finish); width:38px; height:38px; font-size:16px; animation:pulse 1.5s infinite; }
+    .station.finish::before { content:"★"; position:absolute; top:-24px; color:#ffd400; font-size:20px; text-shadow:0 1px 2px #000; }
+    .side-panel { padding:14px; border-radius:14px; background:#fff; box-shadow:0 5px 20px #0f172a26; }
+    .side-panel h2 { margin:0 0 8px; font-size:1.12rem; }
+    .side-panel p { margin:0 0 12px; color:#64748b; font-size:.88rem; }
+    .station-list { display:grid; gap:5px; }
+    .station-button { display:flex; align-items:center; gap:9px; width:100%; padding:7px; border:0; border-radius:8px; background:transparent; color:#172033; text-align:right; cursor:pointer; }
+    .station-button:hover,.station-button:focus { background:#edf5f6; outline:0; }
+    .number { display:grid; place-items:center; flex:0 0 27px; width:27px; height:27px; border-radius:50%; background:var(--orange); color:#fff; font-weight:700; }
+    .station-button.finish-row .number { background:var(--finish); }
+    .station-name { font-weight:700; }
+    .coords { display:block; direction:ltr; color:#64748b; font-size:.7rem; }
+    .note { margin-top:12px; padding:9px; border-radius:8px; background:#fff7ed; color:#9a3412; font-size:.78rem; line-height:1.35; }
+    @keyframes pulse { 0%,100% { box-shadow:0 2px 6px #0008,0 0 0 0 #c6282866; } 70% { box-shadow:0 2px 6px #0008,0 0 0 12px transparent; } }
+    @media (max-width:850px) { .layout { grid-template-columns:1fr; } .side-panel { order:-1; } .map-stage { min-width:600px; } }
   </style>
 </head>
 <body>
   <header>
     <h1>T&amp;A Amazing Race</h1>
-    <p>מפת התחנות — שלולית החורף, נתניה</p>
+    <p>מפה סטטית — שלולית החורף, נתניה</p>
   </header>
+
   <main class="layout">
-    <aside class="legend" aria-label="רשימת תחנות המירוץ">
+    <section class="map-card" aria-label="מפת המירוץ עם תחנות">
+      <div id="map-stage" class="map-stage">
+        <!-- קובץ המפה הקיים בריפו, ללא שימוש באריחי OpenStreetMap -->
+        <img class="map-image" src="./map.PNG" alt="מפת שלולית החורף בנתניה">
+      </div>
+    </section>
+
+    <aside class="side-panel" aria-label="רשימת התחנות">
       <h2>תחנות המירוץ (11)</h2>
-      <p>לחצו על תחנה ברשימה או על סמן במפה לפרטים ולניווט.</p>
-      <div id="point-list" class="point-list"></div>
+      <p>כל הסמנים מוצגים מעל התמונה. תחנת הסיום מסומנת באדום ובכוכב.</p>
+      <div id="station-list" class="station-list"></div>
+      <div class="note">הסמנים ממוקמים בשכבת HTML מעל התמונה. אם התמונה משתנה או נחתכת אחרת, אפשר לכוון את מיקום הסמנים בקלות לפי האחוזים בקוד.</div>
     </aside>
-    <div id="map" aria-label="מפת תחנות המירוץ"></div>
   </main>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
   <script>
-    const points = [
-      { name: 'Pipeline', lat: 32.290844, lng: 34.843266 },
-      { name: 'Antenna Recovery', lat: 32.290249, lng: 34.843910 },
-      { name: 'The Split Protocol', lat: 32.290150, lng: 34.844116 },
-      { name: 'The Human Plotter', lat: 32.291771, lng: 34.843098 },
-      { name: 'The Code Sequence', lat: 32.290646, lng: 34.843346 },
-      { name: 'Human Bug', lat: 32.291157, lng: 34.842754 },
-      { name: 'Guided Chaos', lat: 32.291679, lng: 34.842728 },
-      { name: 'THE DETOUR', lat: 32.291454, lng: 34.842796 },
-      { name: 'Echo Transmission', lat: 32.291687, lng: 34.842827 },
-      { name: 'The Cipher Chain', lat: 32.290604, lng: 34.842987 },
-      { name: 'Final Release', lat: 32.290211, lng: 34.843166 }
+    const stations = [
+      { name:'Pipeline', lat:32.290844, lng:34.843266, x:56, y:43 },
+      { name:'Antenna Recovery', lat:32.290249, lng:34.843910, x:64, y:66 },
+      { name:'The Split Protocol', lat:32.290150, lng:34.844116, x:70, y:72 },
+      { name:'The Human Plotter', lat:32.291771, lng:34.843098, x:42, y:16 },
+      { name:'The Code Sequence', lat:32.290646, lng:34.843346, x:58, y:50 },
+      { name:'Human Bug', lat:32.291157, lng:34.842754, x:29, y:48 },
+      { name:'Guided Chaos', lat:32.291679, lng:34.842728, x:28, y:24 },
+      { name:'THE DETOUR', lat:32.291454, lng:34.842796, x:30, y:34 },
+      { name:'Echo Transmission', lat:32.291687, lng:34.842827, x:31, y:22 },
+      { name:'The Cipher Chain', lat:32.290604, lng:34.842987, x:45, y:53 },
+      { name:'Final Release', lat:32.290211, lng:34.843166, x:52, y:74, finish:true }
     ];
 
-    const map = L.map('map');
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom:19,
-      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    const stage = document.getElementById('map-stage');
+    const list = document.getElementById('station-list');
 
-    const list = document.getElementById('point-list');
-    const positions = [];
-
-    function markerIcon(number) {
-      return L.divIcon({
-        className:'',
-        html:`<div class="race-marker"><span>${number}</span></div>`,
-        iconSize:[32,32], iconAnchor:[16,32], popupAnchor:[0,-28]
-      });
-    }
-
-    points.forEach((point, index) => {
+    stations.forEach((station, index) => {
       const number = index + 1;
-      const position = [point.lat, point.lng];
-      positions.push(position);
-      const mapsUrl = `https://maps.google.com/?q=${point.lat},${point.lng}`;
-      const marker = L.marker(position, { icon:markerIcon(number) }).addTo(map);
-      marker.bindPopup(`
-        <h3 class="popup-title">${number}. ${point.name}</h3>
-        <div class="popup-coords">${point.lat}, ${point.lng}</div>
-        <a class="popup-link" href="${mapsUrl}" target="_blank" rel="noopener noreferrer">פתיחה ב-Google Maps ↗</a>
-      `);
+      const marker = document.createElement('button');
+      marker.type = 'button';
+      marker.className = `station${station.finish ? ' finish' : ''}`;
+      marker.style.left = `${station.x}%`;
+      marker.style.top = `${station.y}%`;
+      marker.title = `${number}. ${station.name}`;
+      marker.setAttribute('aria-label', `${number}. ${station.name}`);
+      marker.textContent = station.finish ? '★' : number;
+      marker.addEventListener('click', () => {
+        marker.animate([{ transform:'translate(-50%,-100%) scale(1)' }, { transform:'translate(-50%,-100%) scale(1.25)' }, { transform:'translate(-50%,-100%) scale(1)' }], { duration:450 });
+      });
+      stage.appendChild(marker);
 
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'point-button';
-      button.innerHTML = `<span class="num">${number}</span><span class="point-text"><span class="point-name">${point.name}</span><span class="coords">${point.lat}, ${point.lng}</span></span>`;
-      button.addEventListener('click', () => { map.setView(position, 18); marker.openPopup(); });
-      list.appendChild(button);
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = `station-button${station.finish ? ' finish-row' : ''}`;
+      row.innerHTML = `<span class="number">${number}</span><span><span class="station-name">${station.name}${station.finish ? ' 🏁' : ''}</span><span class="coords">${station.lat}, ${station.lng}</span></span>`;
+      row.addEventListener('click', () => marker.click());
+      list.appendChild(row);
     });
-
-    L.polyline(positions, { color:'#e85d04', weight:4, opacity:.8, dashArray:'9 8' }).addTo(map);
-    map.fitBounds(positions, { padding:[40,40] });
   </script>
 </body>
 </html>
