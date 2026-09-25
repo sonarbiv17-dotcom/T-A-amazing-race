@@ -3,224 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מירוץ T&A</title>
-
+<title>מירוץ T&amp;A — Amazing Race</title>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
 
 <style>
-
-body{
+  :root { --yellow:#FFD400; --red:#ff2e2e; --orange:#e85d04; --finish:#c62828; --dark:#143642; }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
     margin:0;
-    font-family:'Rubik',sans-serif;
+    color:#172033;
+    font-family:'Rubik',Arial,"Noto Sans Hebrew",sans-serif;
+    background:#edf3f6;
+  }
+
+  /* הקדמה */
+  .intro {
+    min-height:100vh;
+    padding:24px 16px 36px;
+    color:#fff;
     background:
-    linear-gradient(rgba(0,0,0,0.82), rgba(0,0,0,0.92)),
-    url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1600&auto=format&fit=crop');
+      linear-gradient(rgba(0,0,0,.82),rgba(0,0,0,.92)),
+      url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1600&auto=format&fit=crop');
     background-size:cover;
     background-position:center;
-    color:white;
-    min-height:100vh;
     display:flex;
     justify-content:center;
     align-items:center;
-}
+  }
+  .intro-container { width:100%; max-width:950px; }
+  .logo { text-align:center; font-size:clamp(2.4rem,7vw,4rem); font-weight:900; color:var(--yellow); text-shadow:0 0 18px #ffd400d9; margin-bottom:4px; }
+  .subtitle { text-align:center; color:#ff3c3c; font-size:clamp(1.25rem,4vw,2rem); font-weight:700; margin-bottom:18px; }
+  .intro-card { background:#141414e6; border:2px solid var(--yellow); border-radius:18px; padding:24px clamp(16px,4vw,36px); box-shadow:0 0 30px #f00 59%; text-align:center; }
+  .main-title { font-size:clamp(1.8rem,5vw,3rem); color:var(--yellow); margin-bottom:14px; font-weight:900; }
+  .intro-card p { font-size:clamp(.95rem,2.2vw,1.25rem); line-height:1.55; margin:10px 0; }
+  .start-box { margin-top:20px; background:#111; border:2px solid var(--red); border-radius:14px; padding:14px; }
+  .start-box h2 { color:var(--yellow); margin:0 0 6px; font-size:clamp(1.3rem,3vw,1.8rem); }
+  .start-box p { font-size:clamp(.9rem,2vw,1.1rem); }
+  .warning { margin-top:18px; background:#2a0000; border:2px solid var(--red); padding:11px; border-radius:12px; font-size:clamp(.9rem,2vw,1.15rem); font-weight:bold; color:var(--yellow); animation:pulse 1.5s infinite; }
+  .footer { margin-top:18px; color:#bbb; font-size:.9rem; }
 
-.container{
-    width:100%;
-    max-width:950px;
-    padding:30px 25px 60px;
-}
-
-.logo{
-    text-align:center;
-    font-size:64px;
-    font-weight:900;
-    color:#FFD400;
-    text-shadow:0 0 18px rgba(255,212,0,0.85);
-    margin-bottom:10px;
-}
-
-.subtitle{
-    text-align:center;
-    color:#ff3c3c;
-    font-size:34px;
-    font-weight:700;
-    margin-bottom:35px;
-}
-
-.card{
-    background:rgba(20,20,20,0.90);
-    border:3px solid #FFD400;
-    border-radius:24px;
-    padding:45px;
-    box-shadow:0 0 30px rgba(255,0,0,0.35);
-    text-align:center;
-}
-
-.main-title{
-    font-size:52px;
-    color:#FFD400;
-    margin-bottom:25px;
-    font-weight:900;
-}
-
-p{
-    font-size:24px;
-    line-height:2;
-}
-
-.start-box{
-    margin-top:40px;
-    background:#111;
-    border:2px solid #ff2e2e;
-    border-radius:18px;
-    padding:25px;
-}
-
-.start-box h2{
-    color:#FFD400;
-    margin-top:0;
-    font-size:34px;
-}
-
-.start-box p{
-    font-size:22px;
-}
-
-.warning{
-    margin-top:35px;
-    background:#2a0000;
-    border:2px solid #ff2e2e;
-    padding:20px;
-    border-radius:16px;
-    text-align:center;
-    font-size:22px;
-    font-weight:bold;
-    color:#FFD400;
-    animation:pulse 1.5s infinite;
-}
-
-.footer{
-    margin-top:40px;
-    text-align:center;
-    color:#bbb;
-    font-size:18px;
-}
-
-@keyframes pulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.02);}
-    100%{transform:scale(1);}
-}
-
-#bgVideo{
-  position:fixed;
-  width:1px;
-  height:1px;
-  opacity:0;
-  pointer-events:none;
-  top:0;
-  left:0;
-}
-.sound-btn-wrap{
-  position:fixed;
-  top:14px;
-  left:14px;
-  z-index:9999;
-}
-.sound-btn{
-  background:#FFD400;
-  color:#111;
-  border:none;
-  border-radius:999px;
-  padding:10px 16px;
-  font-weight:700;
-  cursor:pointer;
-  box-shadow:0 4px 12px rgba(0,0,0,0.35);
-}
-.sound-btn:hover{
-  transform:translateY(-1px);
-}
-
+  /* מפה */
+  .map-section { padding:18px 14px 28px; background:#edf3f6; }
+  .map-header { max-width:1250px; margin:0 auto 12px; padding:14px 18px; color:#fff; background:linear-gradient(135deg,var(--dark),#087e8b); border-radius:12px; box-shadow:0 2px 12px #0003; }
+  .map-header h1 { margin:0 0 3px; font-size:clamp(1.2rem,3vw,1.7rem); }
+  .map-header p { margin:0; font-size:.9rem; opacity:.9; }
+  .layout { display:grid; grid-template-columns:minmax(0,1fr) 280px; gap:12px; align-items:start; max-width:1250px; margin:auto; }
+  .map-card { overflow:auto; border-radius:12px; background:#fff; box-shadow:0 5px 20px #0f172a26; }
+  .map-stage { position:relative; width:100%; min-width:520px; line-height:0; background:#dfece3; }
+  .map-image { display:block; width:100%; height:auto; user-select:none; }
+  .station { position:absolute; z-index:2; width:29px; height:29px; display:grid; place-items:center; transform:translate(-50%,-100%); border:2px solid #fff; border-radius:50% 50% 50% 0; background:var(--orange); color:#fff; font:700 .78rem Arial,sans-serif; cursor:pointer; box-shadow:0 2px 6px #0008; }
+  .station::after { content:""; position:absolute; left:50%; bottom:-7px; width:7px; height:7px; transform:translateX(-50%) rotate(45deg); background:inherit; z-index:-1; }
+  .station.finish { background:var(--finish); width:35px; height:35px; font-size:15px; animation:pulse-map 1.5s infinite; }
+  .station.finish::before { content:"★"; position:absolute; top:-22px; color:var(--yellow); font-size:18px; text-shadow:0 1px 2px #000; }
+  .side-panel { padding:12px; border-radius:12px; background:#fff; box-shadow:0 5px 20px #0f172a26; }
+  .side-panel h2 { margin:0 0 6px; font-size:1rem; }
+  .side-panel p { margin:0 0 9px; color:#64748b; font-size:.78rem; }
+  .station-list { display:grid; gap:3px; }
+  .station-button { display:flex; align-items:center; gap:7px; width:100%; padding:5px; border:0; border-radius:7px; background:transparent; color:#172033; text-align:right; cursor:pointer; font-family:inherit; }
+  .station-button:hover,.station-button:focus { background:#edf5f6; outline:0; }
+  .number { display:grid; place-items:center; flex:0 0 24px; width:24px; height:24px; border-radius:50%; background:var(--orange); color:#fff; font-size:.78rem; font-weight:700; }
+  .station-button.finish-row .number { background:var(--finish); }
+  .station-name { font-size:.82rem; font-weight:700; }
+  .coords { display:block; direction:ltr; color:#64748b; font-size:.62rem; }
+  .note { margin-top:9px; padding:8px; border-radius:7px; background:#fff7ed; color:#9a3412; font-size:.7rem; line-height:1.3; }
+  #bgVideo { position:fixed; width:1px; height:1px; opacity:0; pointer-events:none; top:0; left:0; }
+  .sound-btn-wrap { position:fixed; top:10px; left:10px; z-index:9999; }
+  .sound-btn { background:var(--yellow); color:#111; border:0; border-radius:999px; padding:8px 12px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px #00000059; font-family:inherit; font-size:.8rem; }
+  @keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.02); } }
+  @keyframes pulse-map { 0%,100% { box-shadow:0 2px 6px #0008,0 0 0 0 #c6282866; } 70% { box-shadow:0 2px 6px #0008,0 0 0 12px transparent; } }
+  @media (max-width:850px) { .layout { grid-template-columns:1fr; } .side-panel { order:-1; } }
 </style>
 </head>
-
 <body>
-
   <video id="bgVideo" autoplay muted loop playsinline preload="auto">
-    <source src="./Mission.mp4" type="video/mp4" />
+    <source src="./Mission.mp4" type="video/mp4">
     הדפדפן שלך לא תומך בווידאו.
   </video>
+  <div class="sound-btn-wrap"><button id="soundBtn" class="sound-btn">🔊 הפעל סאונד</button></div>
 
-  <div class="sound-btn-wrap">
-    <button id="soundBtn" class="sound-btn">🔊 הפעל סאונד</button>
-  </div>
+  <section class="intro">
+    <div class="intro-container">
+      <div class="logo">מירוץ T&amp;A</div>
+      <div class="subtitle">Amazing Race Edition</div>
+      <div class="intro-card">
+        <div class="main-title">🏁 ברוכים הבאים 🏁</div>
+        <p>הגעתם למירוץ הרשמי של צוות T&amp;A 😎</p>
+        <p>במהלך המשחק תעברו בין תחנות,<br>תפתרו משימות,<br>תסתבכו קצת,<br>ותנסו להבין מי חשב שזה רעיון טוב מלכתחילה 💀</p>
+        <p>בכל תחנה תצטרכו לסרוק QR חדש<br>כדי להתקדם לשלב הבא.</p>
+        <div class="start-box">
+          <h2>🎯 המטרה</h2>
+          <p>לסיים את כל התחנות,<br>לאסוף את כל הרמזים,<br>ולהגיע ל־Final Release 🏆</p>
+        </div>
+        <div class="warning">⚠ אין רמזים. אין רחמים. יש רק QR הבא 😈</div>
+        <div class="footer">בהצלחה צוות 😎</div>
+      </div>
+    </div>
+  </section>
 
-<div class="container">
-
-<div class="logo">
-מירוץ T&amp;A
-</div>
-
-<div class="subtitle">
-Amazing Race Edition
-</div>
-
-<div class="card">
-
-<div class="main-title">
-🏁 ברוכים הבאים 🏁
-</div>
-
-<p>
-הגעתם למירוץ הרשמי של צוות T&amp;A 😎
-</p>
-
-<p>
-במהלך המשחק תעברו בין תחנות,<br>
-תפתרו משימות,<br>
-תסתבכו קצת,<br>
-ותנסו להבין מי חשב שזה רעיון טוב מלכתחילה 💀
-</p>
-
-<p>
-בכל תחנה תצטרכו לסרוק QR חדש<br>
-כדי להתקדם לשלב הבא.
-</p>
-
-<div class="start-box">
-
-<h2>🎯 המטרה</h2>
-
-<p>
-לסיים את כל התחנות,<br>
-לאסוף את כל הרמזים,<br>
-ולהגיע ל־Final Release 🏆
-</p>
-
-</div>
-
-<div class="warning">
-⚠ אין רמזים. אין רחמים. יש רק QR הבא 😈
-</div>
-
-<div class="footer">
-בהצלחה צוות 😎
-</div>
-
-</div>
-</div>
+  <section class="map-section" aria-label="מפת המירוץ">
+    <header class="map-header">
+      <h1>T&amp;A Amazing Race</h1>
+      <p>מפה סטטית — שלולית החורף, נתניה</p>
+    </header>
+    <main class="layout">
+      <section class="map-card" aria-label="מפת המירוץ עם תחנות">
+        <div id="map-stage" class="map-stage">
+          <img class="map-image" src="./map.PNG" alt="מפת שלולית החורף בנתניה">
+        </div>
+      </section>
+      <aside class="side-panel" aria-label="רשימת התחנות">
+        <h2>תחנות המירוץ (11)</h2>
+        <p>לחצו על מספר התחנה או על הסמן במפה כדי לפתוח את המיקום ב-Google Maps.</p>
+        <div id="station-list" class="station-list"></div>
+        <div class="note">הסמנים ממוקמים מעל התמונה. אם התמונה משתנה, אפשר לכוון את x ו־y במערך התחנות.</div>
+      </aside>
+    </main>
+  </section>
 
 <script>
   const video = document.getElementById('bgVideo');
   const soundBtn = document.getElementById('soundBtn');
-
   video.muted = true;
   video.volume = 0;
-
-  video.play().catch((error) => {
-    console.warn('הפעלת הווידאו האוטומטית נחסמה:', error);
-  });
-
+  video.play().catch(() => {});
   soundBtn.addEventListener('click', async () => {
     try {
       video.muted = false;
@@ -231,7 +137,52 @@ Amazing Race Edition
       soundBtn.textContent = '❌ לא ניתן להפעיל סאונד';
     }
   });
-</script>
 
+  const stations = [
+    { name:'Pipeline', lat:32.290844, lng:34.843266, x:56, y:43 },
+    { name:'Antenna Recovery', lat:32.290249, lng:34.843910, x:64, y:66 },
+    { name:'The Split Protocol', lat:32.290150, lng:34.844116, x:70, y:72 },
+    { name:'The Human Plotter', lat:32.291771, lng:34.843098, x:42, y:16 },
+    { name:'The Code Sequence', lat:32.290646, lng:34.843346, x:58, y:50 },
+    { name:'Human Bug', lat:32.291157, lng:34.842754, x:29, y:48 },
+    { name:'Guided Chaos', lat:32.291679, lng:34.842728, x:28, y:24 },
+    { name:'THE DETOUR', lat:32.291454, lng:34.842796, x:30, y:34 },
+    { name:'Echo Transmission', lat:32.291687, lng:34.842827, x:31, y:22 },
+    { name:'The Cipher Chain', lat:32.290604, lng:34.842987, x:45, y:53 },
+    { name:'Final Release', lat:32.290211, lng:34.843166, x:52, y:74, finish:true }
+  ];
+
+  const stage = document.getElementById('map-stage');
+  const list = document.getElementById('station-list');
+  stations.forEach((station, index) => {
+    const number = index + 1;
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${station.lat},${station.lng}`;
+    const marker = document.createElement('button');
+    marker.type = 'button';
+    marker.className = `station${station.finish ? ' finish' : ''}`;
+    marker.style.left = `${station.x}%`;
+    marker.style.top = `${station.y}%`;
+    marker.title = `${number}. ${station.name} — פתיחה ב-Google Maps`;
+    marker.setAttribute('aria-label', `${number}. ${station.name}, פתיחה ב-Google Maps`);
+    marker.textContent = station.finish ? '★' : number;
+    marker.addEventListener('click', () => {
+      marker.animate([
+        { transform:'translate(-50%,-100%) scale(1)' },
+        { transform:'translate(-50%,-100%) scale(1.25)' },
+        { transform:'translate(-50%,-100%) scale(1)' }
+      ], { duration:450 });
+      window.open(mapsUrl, '_blank', 'noopener,noreferrer');
+    });
+    stage.appendChild(marker);
+
+    const row = document.createElement('button');
+    row.type = 'button';
+    row.className = `station-button${station.finish ? ' finish-row' : ''}`;
+    row.innerHTML = `<span class="number">${number}</span><span><span class="station-name">${station.name}${station.finish ? ' 🏁' : ''}</span><span class="coords">${station.lat}, ${station.lng}</span></span>`;
+    row.title = 'פתיחה ב-Google Maps';
+    row.addEventListener('click', () => window.open(mapsUrl, '_blank', 'noopener,noreferrer'));
+    list.appendChild(row);
+  });
+</script>
 </body>
 </html>
