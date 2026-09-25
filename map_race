@@ -1,1 +1,107 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T&amp;A Amazing Race — מפת תחנות</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <style>
+    :root { --dark:#143642; --teal:#087e8b; --orange:#e85d04; --muted:#64748b; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial,"Noto Sans Hebrew",sans-serif; background:#edf3f6; color:#172033; }
+    header { padding:18px 22px; color:white; background:linear-gradient(135deg,var(--dark),var(--teal)); box-shadow:0 2px 12px #0003; }
+    h1 { margin:0 0 5px; font-size:clamp(1.4rem,3vw,2.1rem); }
+    header p { margin:0; opacity:.9; }
+    .layout { position:relative; }
+    #map { width:100%; height:calc(100vh - 94px); min-height:520px; }
+    .legend { position:absolute; z-index:1000; top:16px; right:16px; width:min(350px,calc(100% - 32px)); max-height:calc(100vh - 130px); overflow:auto; padding:14px; border-radius:12px; background:#fffffff5; box-shadow:0 6px 22px #0f172a33; }
+    .legend h2 { margin:0 0 7px; font-size:1.12rem; }
+    .legend p { margin:0 0 10px; color:var(--muted); font-size:.9rem; }
+    .point-list { display:grid; gap:5px; }
+    .point-button { display:flex; align-items:center; gap:10px; width:100%; padding:7px; border:0; border-radius:8px; background:transparent; color:#172033; text-align:right; cursor:pointer; }
+    .point-button:hover,.point-button:focus { background:#edf5f6; outline:0; }
+    .num { display:grid; place-items:center; flex:0 0 28px; width:28px; height:28px; border-radius:50%; background:var(--orange); color:#fff; font-weight:bold; }
+    .point-text { display:flex; flex-direction:column; min-width:0; }
+    .point-name { font-weight:bold; line-height:1.2; }
+    .coords { direction:ltr; color:var(--muted); font-size:.72rem; white-space:nowrap; }
+    .race-marker { display:grid; place-items:center; width:32px; height:32px; border:3px solid white; border-radius:50% 50% 50% 0; background:var(--orange); color:#fff; box-shadow:0 2px 5px #0006; transform:rotate(-45deg); font-weight:bold; }
+    .race-marker span { transform:rotate(45deg); }
+    .popup-title { margin:0 0 5px; font-size:1rem; }
+    .popup-coords { direction:ltr; color:var(--muted); font-size:.8rem; margin-bottom:6px; }
+    .popup-link { color:var(--teal); font-weight:bold; text-decoration:none; }
+    @media (max-width:700px) { .legend { top:10px; right:10px; width:min(300px,calc(100% - 20px)); padding:11px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>T&amp;A Amazing Race</h1>
+    <p>מפת התחנות — שלולית החורף, נתניה</p>
+  </header>
+  <main class="layout">
+    <aside class="legend" aria-label="רשימת תחנות המירוץ">
+      <h2>תחנות המירוץ (10)</h2>
+      <p>לחצו על תחנה ברשימה או על סמן במפה לפרטים ולניווט.</p>
+      <div id="point-list" class="point-list"></div>
+    </aside>
+    <div id="map" aria-label="מפת תחנות המירוץ"></div>
+  </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script>
+    const points = [
+      { name: 'Pipeline', lat: 32.290844, lng: 34.843266 },
+      { name: 'Antenna Recovery', lat: 32.290249, lng: 34.843910 },
+      { name: 'The Split Protocol', lat: 32.290150, lng: 34.844116 },
+      { name: 'The Human Plotter', lat: 32.291771, lng: 34.843098 },
+      { name: 'The Code Sequence', lat: 32.290646, lng: 34.843346 },
+      { name: 'Human Bug', lat: 32.291157, lng: 34.842754 },
+      { name: 'Guided Chaos', lat: 32.291679, lng: 34.842728 },
+      { name: 'THE DETOUR', lat: 32.291454, lng: 34.842796 },
+      { name: 'Echo Transmission', lat: 32.291687, lng: 34.842827 },
+      { name: 'The Cipher Chain', lat: 32.290604, lng: 34.842987 }
+    ];
 
+    const map = L.map('map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom:19,
+      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    const list = document.getElementById('point-list');
+    const positions = [];
+    const markers = [];
+
+    function markerIcon(number) {
+      return L.divIcon({
+        className:'',
+        html:`<div class="race-marker"><span>${number}</span></div>`,
+        iconSize:[32,32], iconAnchor:[16,32], popupAnchor:[0,-28]
+      });
+    }
+
+    points.forEach((point, index) => {
+      const number = index + 1;
+      const position = [point.lat, point.lng];
+      positions.push(position);
+      const mapsUrl = `https://maps.google.com/?q=${point.lat},${point.lng}`;
+      const marker = L.marker(position, { icon:markerIcon(number) }).addTo(map);
+      marker.bindPopup(`
+        <h3 class="popup-title">${number}. ${point.name}</h3>
+        <div class="popup-coords">${point.lat}, ${point.lng}</div>
+        <a class="popup-link" href="${mapsUrl}" target="_blank" rel="noopener noreferrer">פתיחה ב-Google Maps ↗</a>
+      `);
+      markers.push(marker);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'point-button';
+      button.innerHTML = `<span class="num">${number}</span><span class="point-text"><span class="point-name">${point.name}</span><span class="coords">${point.lat}, ${point.lng}</span></span>`;
+      button.addEventListener('click', () => { map.setView(position, 18); marker.openPopup(); });
+      list.appendChild(button);
+    });
+
+    // המסלול מחבר את התחנות לפי סדר הרשימה.
+    L.polyline(positions, { color:'#e85d04', weight:4, opacity:.8, dashArray:'9 8' }).addTo(map);
+    map.fitBounds(positions, { padding:[40,40] });
+  </script>
+</body>
+</html>
