@@ -39,7 +39,7 @@
   </header>
   <main class="layout">
     <aside class="legend" aria-label="רשימת תחנות המירוץ">
-      <h2>תחנות המירוץ (10)</h2>
+      <h2>תחנות המירוץ (11)</h2>
       <p>לחצו על תחנה ברשימה או על סמן במפה לפרטים ולניווט.</p>
       <div id="point-list" class="point-list"></div>
     </aside>
@@ -57,7 +57,8 @@
       { name: 'Guided Chaos', lat: 32.291679, lng: 34.842728 },
       { name: 'THE DETOUR', lat: 32.291454, lng: 34.842796 },
       { name: 'Echo Transmission', lat: 32.291687, lng: 34.842827 },
-      { name: 'The Cipher Chain', lat: 32.290604, lng: 34.842987 }
+      { name: 'The Cipher Chain', lat: 32.290604, lng: 34.842987 },
+      { name: 'Final Release', lat: 32.290211, lng: 34.843166 }
     ];
 
     const map = L.map('map');
@@ -68,7 +69,6 @@
 
     const list = document.getElementById('point-list');
     const positions = [];
-    const markers = [];
 
     function markerIcon(number) {
       return L.divIcon({
@@ -89,7 +89,6 @@
         <div class="popup-coords">${point.lat}, ${point.lng}</div>
         <a class="popup-link" href="${mapsUrl}" target="_blank" rel="noopener noreferrer">פתיחה ב-Google Maps ↗</a>
       `);
-      markers.push(marker);
 
       const button = document.createElement('button');
       button.type = 'button';
@@ -99,7 +98,6 @@
       list.appendChild(button);
     });
 
-    // המסלול מחבר את התחנות לפי סדר הרשימה.
     L.polyline(positions, { color:'#e85d04', weight:4, opacity:.8, dashArray:'9 8' }).addTo(map);
     map.fitBounds(positions, { padding:[40,40] });
   </script>
