@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מירוץ T&amp;A — Amazing Race</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+  :root{--yellow:#ffd400;--red:#ff2e2e;--orange:#e85d04;--finish:#c62828;
+    --bg:#0b1220;--panel:#111c33;--panel2:#16233f;--accent:#28c8ff;--accent2:#00e0a4;--text:#e9f1ff;--muted:#8ea3c4;--done:#00e0a4;--active:#ffcc33}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  /* שלושה טורים במסך אחד: מלל מימין, מפה באמצע, רשימת תחנות משמאל */
+  html,body{height:100%}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Rubik',Arial,sans-serif;height:100svh;overflow:hidden}
+
+  /* עמודת האינטרו מימין – באותה ערכת צבעים כחולה כמו שאר הממשק */
+  .intro{flex:0 0 460px;width:460px;height:100%;overflow-y:auto;padding:20px 0 22px;background:linear-gradient(180deg,#0e1730,#0b1220);border-inline-end:1px solid #22335a}
+  .intro-inner{width:100%;max-width:100%;margin:auto;text-align:center;padding:0 22px}
+  .logo{font-size:clamp(2.4rem,4vw,3.4rem);font-weight:900;color:var(--yellow);text-shadow:0 0 14px #ffd400d9;line-height:1.05}
+  .subtitle{margin:5px 0 16px;color:#ff5a5a;font-size:clamp(1.2rem,2.4vw,1.7rem);font-weight:700}
+  .welcome{margin-top:4px;padding:16px 18px;background:var(--panel);border:1px solid #22335a;border-radius:12px}
+  .welcome h1{margin:0 0 10px;color:var(--yellow);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:900}
+  .welcome p{margin:0 0 10px;font-size:clamp(.95rem,1.6vw,1.1rem);line-height:1.55;color:var(--text)}
+  .welcome p:last-of-type{margin-bottom:0}
+  .goal{margin-top:12px;padding:14px 18px;background:var(--panel);border:1px solid #22335a;border-radius:12px}
+  .goal h2{margin:0 0 7px;color:var(--yellow);font-size:clamp(1.3rem,2.4vw,1.6rem)}
+  .goal p{margin:0;font-size:clamp(.9rem,1.5vw,1.05rem);line-height:1.6;color:var(--text)}
+  .warning{margin-top:14px;padding:11px 14px;background:#1a0f14;border:1px solid var(--red);border-radius:10px;color:var(--yellow);font-size:clamp(.9rem,1.5vw,1.05rem);font-weight:700}
+  .footer{margin-top:12px;color:var(--muted);font-size:.85rem}
+
+  /* המפה האינטראקטיבית יושבת באמצע בין המלל לרשימת התחנות */
+  #app{display:flex;height:100svh;width:100%;overflow:hidden;font-family:"Segoe UI",Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+  #sidebar{width:330px;min-width:330px;height:100%;background:linear-gradient(180deg,#0e1730,#0b1220);border-inline-start:1px solid #22335a;display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.4);z-index:1000}
+  #sidebar header{padding:16px 18px 12px;border-bottom:1px solid #22335a;background:linear-gradient(90deg,#12224a,#0e1730)}
+  #sidebar header h1{margin:0;font-size:20px;letter-spacing:.5px}
+  #sidebar header h1 .dot{color:var(--accent)}
+  #sidebar header p{margin:6px 0 0;font-size:12px;color:var(--muted)}
+  #statusBar{padding:10px 18px;font-size:12.5px;color:var(--muted);border-bottom:1px solid #22335a;display:flex;gap:8px;align-items:center}
+  #statusBar .live{width:9px;height:9px;border-radius:50%;background:#555;flex:0 0 auto}
+  #statusBar .live.on{background:var(--accent2);box-shadow:0 0 8px var(--accent2);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%{opacity:1}50%{opacity:.35}100%{opacity:1}}
+  #stationList{list-style:none;margin:0;padding:8px;overflow-y:auto;flex:1}
+  .station{display:flex;align-items:center;gap:12px;padding:11px 12px;margin:6px 4px;border-radius:12px;background:var(--panel);border:1px solid transparent;cursor:pointer;transition:.15s}
+  .station:hover{background:var(--panel2);border-color:#2a3d68}
+  .station.selected{border-color:var(--accent);background:#152848;box-shadow:0 0 0 1px var(--accent) inset}
+  .station .num{width:34px;height:34px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#04121f;background:var(--accent)}
+  .station.done .num{background:var(--done)}
+  .station .info{flex:1;min-width:0}
+  .station .info .name{font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .station .info .meta{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .station .chev{color:var(--muted);font-size:18px}
+  #mapWrap{flex:1;position:relative;height:100%}
+  #map{height:100%;width:100%}
+  #actionCard{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:min(560px,92%);z-index:1200;background:rgba(15,24,46,.96);backdrop-filter:blur(8px);border:1px solid #2a3d68;border-radius:16px;padding:14px 16px;box-shadow:0 12px 40px rgba(0,0,0,.5);display:none}
+  #actionCard.show{display:block;animation:rise .2s ease}
+  @keyframes rise{from{transform:translate(-50%,10px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+  #actionCard .top{display:flex;align-items:center;gap:12px}
+  #actionCard .badge{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#04121f;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  #actionCard .title{font-size:17px;font-weight:700}
+  #actionCard .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+  #actionCard .close{margin-inline-start:auto;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+  #actionCard .stats{display:flex;gap:10px;margin:12px 0}
+  #actionCard .stat{flex:1;background:#0d1730;border:1px solid #22335a;border-radius:12px;padding:8px 10px;text-align:center}
+  #actionCard .stat .v{font-size:18px;font-weight:700;color:var(--accent2)}
+  #actionCard .stat .l{font-size:11px;color:var(--muted);margin-top:2px}
+  #actionCard .buttons{display:flex;gap:10px}
+  .btn{flex:1;padding:11px;border-radius:12px;border:none;cursor:pointer;font-size:14px;font-weight:700;transition:.15s;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+  .btn.primary{background:linear-gradient(90deg,var(--accent),#1aa5e6);color:#04121f}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.done{background:linear-gradient(90deg,var(--done),#00b585);color:#04121f}
+  #locateBtn{position:absolute;left:14px;bottom:18px;z-index:1200;width:52px;height:52px;border-radius:50%;border:1px solid #2a3d68;background:rgba(15,24,46,.96);color:var(--accent);font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+  #locateBtn.on{color:var(--accent2);border-color:var(--accent2)}
+  #menuToggle{display:none;position:absolute;top:12px;right:12px;z-index:1300;width:46px;height:46px;border-radius:12px;border:1px solid #2a3d68;background:rgba(15,24,46,.96);color:var(--text);font-size:20px;cursor:pointer}
+  .marker-pin{width:32px;height:32px;border-radius:50% 50% 50% 0;background:var(--accent);transform:rotate(-45deg);border:2px solid #04121f;box-shadow:0 3px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+  .marker-pin.done{background:var(--done)}
+  .marker-pin span{transform:rotate(45deg);color:#04121f;font-weight:800;font-size:14px}
+  .marker-me{width:20px;height:20px;border-radius:50%;background:var(--accent2);border:3px solid #fff;box-shadow:0 0 0 6px rgba(0,224,164,.25),0 2px 6px rgba(0,0,0,.5)}
+  @media (max-width:760px){
+    #app{flex-direction:column}
+    .intro{flex:0 0 auto;width:100%;max-height:42svh;border-inline-end:none;border-bottom:1px solid #22335a}
+    #sidebar{position:absolute;right:0;top:0;height:100%;transform:translateX(100%);transition:.25s}
+    #sidebar.open{transform:translateX(0)}
+    #menuToggle{display:flex;align-items:center;justify-content:center}
+  }
+  /* \u05db\u05e9\u05d4\u05de\u05e1\u05da \u05e0\u05de\u05d5\u05da \u2013 \u05de\u05db\u05d5\u05d5\u05e6\u05d9\u05dd \u05d0\u05ea \u05d4\u05d0\u05d9\u05e0\u05d8\u05e8\u05d5 \u05db\u05d3\u05d9 \u05e9\u05d4\u05de\u05e4\u05d4 \u05ea\u05e9\u05d0\u05e8 \u05e9\u05d9\u05de\u05d5\u05e9\u05d9\u05ea */
+  @media (max-height:720px){
+    .intro{padding:5px 0 6px}
+    .logo{font-size:clamp(1.4rem,6vw,2rem)}
+    .subtitle{margin:1px 0 5px;font-size:clamp(.8rem,3.6vw,1.1rem)}
+    .welcome{padding:6px 12px 7px}
+    .welcome h1{margin:0 0 4px;font-size:clamp(1rem,5vw,1.4rem)}
+    .welcome p{margin:0 0 4px;font-size:clamp(.62rem,2.8vw,.8rem);line-height:1.3}
+    .goal{padding:5px 12px 6px}
+    .goal h2{margin:0 0 3px;font-size:clamp(.85rem,4vw,1.1rem)}
+    .goal p{font-size:clamp(.6rem,2.6vw,.78rem);line-height:1.35}
+    .warning{margin-top:5px;font-size:clamp(.6rem,2.6vw,.78rem)}
+    .footer{margin-top:4px;font-size:.66rem}
+  }
+  #bgVideo{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:0;left:0}
+  .sound-btn-wrap{position:fixed;top:8px;left:8px;z-index:9999}.sound-btn{padding:6px 9px;border:0;border-radius:999px;background:var(--yellow);color:#111;font:700 .7rem 'Rubik',sans-serif;cursor:pointer;box-shadow:0 5px 10px rgba(0,0,0,.2)}
+  @keyframes pulse-map{0%,100%{box-shadow:0 2px 6px #0008,0 0 0 0 #c6282866}70%{box-shadow:0 2px 6px #0008,0 0 0 12px transparent}}
+</style>
+</head>
+<body>
+  <video id="bgVideo" autoplay muted loop playsinline preload="auto">
+    <source src="./Mission.mp4" type="video/mp4">
+    הדפדפן שלך לא תומך בווידאו.
+  </video>
+  <div class="sound-btn-wrap"><button id="soundBtn" class="sound-btn">🔊 הפעל סאונד</button></div>
+
+  <div id="app">
+  <section class="intro">
+    <div class="intro-inner">
+      <div class="logo">מירוץ T&amp;A</div>
+      <div class="subtitle">Amazing Race Edition</div>
+      <div class="welcome">
+        <h1>🏁 ברוכים הבאים 🏁</h1>
+        <p>הגעתם למירוץ הרשמי של צוות T&amp;A 😎</p>
+        <p>במהלך המשחק תעברו בין תחנות,<br>תפתרו משימות,<br>תסתבכו קצת,<br>ותנסו להבין מי חשב שזה רעיון טוב מלכתחילה 💀</p>
+        <p>בכל תחנה תצטרכו לסרוק QR חדש<br>כדי להתקדם לשלב הבא.</p>
+      </div>
+      <div class="goal">
+        <h2>🎯 המטרה</h2>
+        <p>להגיע לכמה שיותר נקודות 📍<br>כי הקבוצה המנצחת זוכה במתנה שווה באמת 🎁<br>(כן כן, מתנה אמיתית — לא רק כבוד ותעודה 😏)</p>
+      </div>
+      <div class="warning">⚠ אין רמזים. אין רחמים. יש רק QR הבא 😈</div>
+      <div class="footer">בהצלחה צוות 😎</div>
+    </div>
+  </section>
+
+      <div id="mapWrap">
+        <div id="map"></div>
+        <button id="menuToggle" title="תחנות">☰</button>
+        <button id="locateBtn" title="המיקום שלי">◎</button>
+        <div id="actionCard">
+          <div class="top">
+            <div class="badge" id="acBadge">1</div>
+            <div>
+              <div class="title" id="acTitle">תחנה</div>
+              <div class="sub" id="acSub">נקודת ציון</div>
+            </div>
+            <button class="close" id="acClose">×</button>
+          </div>
+          <div class="stats">
+            <div class="stat"><div class="v" id="acDist">–</div><div class="l">מרחק ממך</div></div>
+            <div class="stat"><div class="v" id="acEta">–</div><div class="l">הליכה משוערת</div></div>
+          </div>
+          <div class="buttons">
+            <a class="btn primary" id="acNav" target="_blank" rel="noopener">🧭 פתח ניווט</a>
+            <button class="btn done" id="acDone">✓ הגעתי</button>
+          </div>
+        </div>
+      </div>
+      <aside id="sidebar">
+        <header>
+          <h1>מפת המירוץ <span class="dot">●</span></h1>
+          <p>לחצו על תחנה כדי לראות את ההתקדמות שלכם אליה</p>
+        </header>
+        <div id="statusBar"><span class="live" id="liveDot"></span><span id="statusText">מאתר מיקום...</span></div>
+        <ul id="stationList"></ul>
+      </aside>
+  </div>
+
+<script>
+  const video=document.getElementById('bgVideo'),soundBtn=document.getElementById('soundBtn');
+  video.muted=true;video.volume=0;video.play().catch(()=>{});
+  soundBtn.addEventListener('click',async()=>{try{video.muted=false;video.volume=1;await video.play();soundBtn.textContent='✅ הסאונד פועל'}catch(e){soundBtn.textContent='❌ לא ניתן להפעיל סאונד'}});
+</script>
+
+<script>
+/* ==== נתוני התחנות לפי סדר המירוץ ==== */
+const STATIONS = [
+  { n:1,  name:"Pipeline",           lat:32.290844, lng:34.843266 },
+  { n:2,  name:"Antenna Recovery",   lat:32.290249, lng:34.843910 },
+  { n:3,  name:"The Split Protocol",  lat:32.290150, lng:34.844116 },
+  { n:4,  name:"The Human Plotter",   lat:32.291771, lng:34.843098 },
+  { n:5,  name:"The Code Sequence",   lat:32.290646, lng:34.843346 },
+  { n:6,  name:"Echo Transmission",   lat:32.291687, lng:34.842827 },
+  { n:7,  name:"Guided Chaos",        lat:32.291679, lng:34.842728 },
+  { n:8,  name:"The Detour",          lat:32.291454, lng:34.842796 },
+  { n:9,  name:"Human Bug",           lat:32.291157, lng:34.842754 },
+  { n:10, name:"The Cipher Chain",    lat:32.290604, lng:34.842987 },
+  { n:11, name:"Final Release",       lat:32.290211, lng:34.843166 },
+];
+
+/* ==== מצב ==== */
+const doneSet = new Set(JSON.parse(localStorage.getItem("race_done")||"[]"));
+let selected = null;
+let userPos = null;
+let userMarker = null;
+let routeLine = null;
+
+/* ==== מפה ==== */
+// zoomSnap:0 מאפשר זום שברי כדי שתמונת המפה תמלא בדיוק את המיכל
+const map = L.map('map',{zoomControl:true, attributionControl:true, zoomSnap:0});
+
+// גבולות גאוגרפיים של תמונת המפה — [[דרום, מערב],[צפון, מזרח]]. התאם ערכים אלה כדי שהסמנים ישבו במקום הנכון
+const IMG_BOUNDS = [[32.28985, 34.84230],[32.29210, 34.84455]];
+const raceImage = L.imageOverlay('../../maplast.png', IMG_BOUNDS, {opacity:1}).addTo(map);
+
+L.control.layers(null, { 'תמונת המפה': raceImage }, {position:'topleft'}).addTo(map);
+
+map.setMaxBounds(L.latLngBounds(IMG_BOUNDS).pad(0.2));
+
+// מודד מחדש את גודל המפה ומתאים אותה לגבולות התמונה — נדרש כי המפה נטענת מתחת לקיפול
+function fitMap(){
+  map.invalidateSize();
+  map.setMinZoom(0);
+  map.fitBounds(IMG_BOUNDS, {padding:[0,0]});
+  map.setMinZoom(map.getZoom());
+}
+fitMap();
+
+/* markers */
+const markers = {};
+STATIONS.forEach(s=>{
+  const done = doneSet.has(s.n);
+  const icon = L.divIcon({
+    className:'',
+    html:`<div class="marker-pin ${done?'done':''}"><span>${s.n}</span></div>`,
+    iconSize:[32,32], iconAnchor:[16,32], popupAnchor:[0,-30]
+  });
+  const m = L.marker([s.lat,s.lng],{icon}).addTo(map);
+  m.bindPopup(`<b>${s.n}. ${s.name}</b>`);
+  m.on('click',()=>selectStation(s.n));
+  markers[s.n]=m;
+});
+
+/* ==== רשימת תחנות ==== */
+const listEl = document.getElementById('stationList');
+function renderList(){
+  listEl.innerHTML='';
+  STATIONS.forEach(s=>{
+    const done = doneSet.has(s.n);
+    const li = document.createElement('li');
+    li.className = 'station'+(done?' done':'')+(selected===s.n?' selected':'');
+    li.innerHTML = `
+      <div class="num">${done?'✓':s.n}</div>
+      <div class="info">
+        <div class="name">${s.name}</div>
+        <div class="meta">${done?'הושלם':distanceText(s)}</div>
+      </div>
+      <div class="chev">‹</div>`;
+    li.onclick=()=>{ selectStation(s.n); closeSidebarMobile(); };
+    listEl.appendChild(li);
+  });
+}
+
+function distanceText(s){
+  if(!userPos) return '—';
+  const d = haversine(userPos.lat,userPos.lng,s.lat,s.lng);
+  return fmtDist(d);
+}
+function fmtDist(m){ return m<1000 ? Math.round(m)+' מ׳' : (m/1000).toFixed(2)+' ק״מ'; }
+function fmtEta(m){ const min = Math.max(1,Math.round(m/1.35/60)); return min+' דק׳'; } // ~5 קמ"ש
+
+function haversine(la1,lo1,la2,lo2){
+  const R=6371000, toR=x=>x*Math.PI/180;
+  const dLa=toR(la2-la1), dLo=toR(lo2-lo1);
+  const a=Math.sin(dLa/2)**2 + Math.cos(toR(la1))*Math.cos(toR(la2))*Math.sin(dLo/2)**2;
+  return 2*R*Math.asin(Math.sqrt(a));
+}
+
+/* ==== בחירת תחנה ==== */
+function selectStation(n){
+  selected = n;
+  const s = STATIONS.find(x=>x.n===n);
+  map.flyTo([s.lat,s.lng], 18, {duration:.6});
+  markers[n].openPopup();
+  renderList();
+  showCard(s);
+  drawRoute(s);
+}
+
+const card=document.getElementById('actionCard');
+function showCard(s){
+  document.getElementById('acBadge').textContent = doneSet.has(s.n)?'✓':s.n;
+  document.getElementById('acTitle').textContent = s.name;
+  document.getElementById('acSub').textContent = doneSet.has(s.n)?'תחנה הושלמה':'תחנה '+s.n+' · נקודת ציון';
+  updateCardStats(s);
+  const nav = document.getElementById('acNav');
+  nav.href = navUrl(s);
+  const doneBtn = document.getElementById('acDone');
+  doneBtn.textContent = doneSet.has(s.n)?'↺ בטל סימון':'✓ הגעתי';
+  card.classList.add('show');
+}
+function updateCardStats(s){
+  if(userPos){
+    const d = haversine(userPos.lat,userPos.lng,s.lat,s.lng);
+    document.getElementById('acDist').textContent = fmtDist(d);
+    document.getElementById('acEta').textContent  = fmtEta(d);
+  }else{
+    document.getElementById('acDist').textContent = '—';
+    document.getElementById('acEta').textContent  = '—';
+  }
+}
+function navUrl(s){
+  // ניווט להליכה מהמיקום הנוכחי של המשתמש אל התחנה
+  return `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=walking`;
+}
+
+document.getElementById('acClose').onclick=()=>{ card.classList.remove('show'); clearRoute(); selected=null; renderList(); };
+document.getElementById('acDone').onclick=()=>{
+  if(selected==null) return;
+  if(doneSet.has(selected)) doneSet.delete(selected); else doneSet.add(selected);
+  localStorage.setItem('race_done',JSON.stringify([...doneSet]));
+  refreshMarker(selected);
+  const s=STATIONS.find(x=>x.n===selected);
+  showCard(s); renderList();
+};
+
+function refreshMarker(n){
+  const s=STATIONS.find(x=>x.n===n);
+  const done=doneSet.has(n);
+  markers[n].setIcon(L.divIcon({
+    className:'',
+    html:`<div class="marker-pin ${done?'done':''}"><span>${s.n}</span></div>`,
+    iconSize:[32,32], iconAnchor:[16,32], popupAnchor:[0,-30]
+  }));
+}
+
+/* ==== קו התקדמות מהמשתמש לתחנה ==== */
+function drawRoute(s){
+  clearRoute();
+  if(!userPos) return;
+  routeLine = L.polyline([[userPos.lat,userPos.lng],[s.lat,s.lng]],{
+    color:'#28c8ff', weight:4, opacity:.85, dashArray:'2 10', lineCap:'round'
+  }).addTo(map);
+}
+function clearRoute(){ if(routeLine){ map.removeLayer(routeLine); routeLine=null; } }
+
+/* ==== מיקום המשתמש ==== */
+const liveDot=document.getElementById('liveDot');
+const statusText=document.getElementById('statusText');
+const locateBtn=document.getElementById('locateBtn');
+
+function onPos(p){
+  userPos={lat:p.coords.latitude, lng:p.coords.longitude, acc:p.coords.accuracy};
+  liveDot.classList.add('on'); locateBtn.classList.add('on');
+  statusText.textContent = 'מיקום פעיל · דיוק '+Math.round(userPos.acc)+' מ׳';
+  const ll=[userPos.lat,userPos.lng];
+  if(!userMarker){
+    userMarker=L.marker(ll,{icon:L.divIcon({className:'',html:'<div class="marker-me"></div>',iconSize:[20,20],iconAnchor:[10,10]}),zIndexOffset:1000}).addTo(map);
+  }else userMarker.setLatLng(ll);
+  if(selected!=null){
+    const s=STATIONS.find(x=>x.n===selected);
+    drawRoute(s); updateCardStats(s);
+  }
+  renderList();
+}
+function onPosErr(){
+  liveDot.classList.remove('on'); locateBtn.classList.remove('on');
+  statusText.textContent='לא ניתן לאתר מיקום (אשרו הרשאת מיקום)';
+}
+if(navigator.geolocation){
+  navigator.geolocation.watchPosition(onPos,onPosErr,{enableHighAccuracy:true,maximumAge:2000,timeout:10000});
+}else{
+  statusText.textContent='הדפדפן לא תומך במיקום';
+}
+locateBtn.onclick=()=>{
+  if(userPos) map.flyTo([userPos.lat,userPos.lng],18,{duration:.6});
+  else if(navigator.geolocation) navigator.geolocation.getCurrentPosition(onPos,onPosErr,{enableHighAccuracy:true});
+};
+
+/* ==== תפריט מובייל ==== */
+const sidebar=document.getElementById('sidebar');
+document.getElementById('menuToggle').onclick=()=>sidebar.classList.toggle('open');
+function closeSidebarMobile(){ if(window.innerWidth<=760) sidebar.classList.remove('open'); }
+
+/* ==== תיקון גודל המפה: בטעינה, בשינוי גודל, וכשהמפה נכנסת לתצוגה ==== */
+window.addEventListener('load', fitMap);
+window.addEventListener('resize', fitMap);
+// רענון המפה בכל שינוי גודל בפועל — מטפל במעבר לפריסת flex
+if('ResizeObserver' in window){
+  const ro = new ResizeObserver(()=>fitMap());
+  ro.observe(document.getElementById('map'));
+}
+
+renderList();
+</script>
+</body>
+</html>
