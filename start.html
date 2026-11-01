@@ -35,7 +35,7 @@
 
   /* המפה האינטראקטיבית יושבת באמצע בין המלל לרשימת התחנות */
   #app{display:flex;height:100svh;width:100%;overflow:hidden;font-family:"Segoe UI",Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-  #sidebar{width:330px;min-width:330px;height:100%;background:linear-gradient(180deg,#0e1730,#0b1220);border-inline-start:1px solid #22335a;display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.4);z-index:1000}
+  #sidebar{width:330px;min-width:330px;height:100%;background:linear-gradient(180deg,#0e1730,#0b1220);border-inline-start:1px solid #22335a;display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.35)}
   #sidebar header{padding:16px 18px 12px;border-bottom:1px solid #22335a;background:linear-gradient(90deg,#12224a,#0e1730)}
   #sidebar header h1{margin:0;font-size:20px;letter-spacing:.5px}
   #sidebar header h1 .dot{color:var(--accent)}
@@ -56,7 +56,7 @@
   .station .chev{color:var(--muted);font-size:18px}
   #mapWrap{flex:1;position:relative;height:100%}
   #map{height:100%;width:100%}
-  #actionCard{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:min(560px,92%);z-index:1200;background:rgba(15,24,46,.96);backdrop-filter:blur(8px);border:1px solid #2a3d68;border-radius:16px;padding:14px 16px;box-shadow:0 12px 40px rgba(0,0,0,.5);display:none}
+  #actionCard{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);width:min(560px,92%);z-index:1200;background:rgba(15,24,46,.96);backdrop-filter:blur(8px);border:1px solid #2a3d68;border-radius:16px;padding:16px 16px 14px;box-shadow:0 18px 40px rgba(0,0,0,.45);display:none}
   #actionCard.show{display:block;animation:rise .2s ease}
   @keyframes rise{from{transform:translate(-50%,10px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
   #actionCard .top{display:flex;align-items:center;gap:12px}
@@ -69,13 +69,13 @@
   #actionCard .stat .v{font-size:18px;font-weight:700;color:var(--accent2)}
   #actionCard .stat .l{font-size:11px;color:var(--muted);margin-top:2px}
   #actionCard .buttons{display:flex;gap:10px}
-  .btn{flex:1;padding:11px;border-radius:12px;border:none;cursor:pointer;font-size:14px;font-weight:700;transition:.15s;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+  .btn{flex:1;padding:11px;border-radius:12px;border:none;cursor:pointer;font-size:14px;font-weight:700;transition:.15s;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}
   .btn.primary{background:linear-gradient(90deg,var(--accent),#1aa5e6);color:#04121f}
   .btn.primary:hover{filter:brightness(1.08)}
   .btn.done{background:linear-gradient(90deg,var(--done),#00b585);color:#04121f}
-  #locateBtn{position:absolute;left:14px;bottom:18px;z-index:1200;width:52px;height:52px;border-radius:50%;border:1px solid #2a3d68;background:rgba(15,24,46,.96);color:var(--accent);font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+  #locateBtn{position:absolute;left:14px;bottom:18px;z-index:1200;width:52px;height:52px;border-radius:50%;border:1px solid #2a3d68;background:rgba(15,24,46,.96);color:var(--accent);font-size:22px;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.3)}
   #locateBtn.on{color:var(--accent2);border-color:var(--accent2)}
-  #menuToggle{display:none;position:absolute;top:12px;right:12px;z-index:1300;width:46px;height:46px;border-radius:12px;border:1px solid #2a3d68;background:rgba(15,24,46,.96);color:var(--text);font-size:20px;cursor:pointer}
+  #menuToggle{display:none;position:absolute;top:12px;right:12px;z-index:1300;width:46px;height:46px;border-radius:12px;border:1px solid #2a3d68;background:rgba(15,24,46,.96);color:var(--text);font-size:22px;cursor:pointer}
   .marker-pin{width:32px;height:32px;border-radius:50% 50% 50% 0;background:var(--accent);transform:rotate(-45deg);border:2px solid #04121f;box-shadow:0 3px 8px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
   .marker-pin.done{background:var(--done)}
   .marker-pin span{transform:rotate(45deg);color:#04121f;font-weight:800;font-size:14px}
@@ -87,7 +87,6 @@
     #sidebar.open{transform:translateX(0)}
     #menuToggle{display:flex;align-items:center;justify-content:center}
   }
-  /* \u05db\u05e9\u05d4\u05de\u05e1\u05da \u05e0\u05de\u05d5\u05da \u2013 \u05de\u05db\u05d5\u05d5\u05e6\u05d9\u05dd \u05d0\u05ea \u05d4\u05d0\u05d9\u05e0\u05d8\u05e8\u05d5 \u05db\u05d3\u05d9 \u05e9\u05d4\u05de\u05e4\u05d4 \u05ea\u05e9\u05d0\u05e8 \u05e9\u05d9\u05de\u05d5\u05e9\u05d9\u05ea */
   @media (max-height:720px){
     .intro{padding:5px 0 6px}
     .logo{font-size:clamp(1.4rem,6vw,2rem)}
@@ -102,7 +101,7 @@
     .footer{margin-top:4px;font-size:.66rem}
   }
   #bgVideo{position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:0;left:0}
-  .sound-btn-wrap{position:fixed;top:8px;left:8px;z-index:9999}.sound-btn{padding:6px 9px;border:0;border-radius:999px;background:var(--yellow);color:#111;font:700 .7rem 'Rubik',sans-serif;cursor:pointer;box-shadow:0 5px 10px rgba(0,0,0,.2)}
+  .sound-btn-wrap{position:fixed;top:8px;left:8px;z-index:9999}.sound-btn{padding:6px 9px;border:0;border-radius:999px;background:var(--yellow);color:#111;font:700 .7rem 'Rubik',sans-serif;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.25)}
   @keyframes pulse-map{0%,100%{box-shadow:0 2px 6px #0008,0 0 0 0 #c6282866}70%{box-shadow:0 2px 6px #0008,0 0 0 12px transparent}}
 </style>
 </head>
@@ -126,7 +125,7 @@
       </div>
       <div class="goal">
         <h2>🎯 המטרה</h2>
-        <p>להגיע לכמה שיותר נקודות 📍<br>כי הקבוצה המנצחת זוכה במתנה שווה באמת 🎁<br>(כן כן, מתנה אמיתית — לא רק כבוד ותעודה 😏)</p>
+        <p>להגיע לכמה שיותר נקודות 📍<br>כי הקבוצה המנצחת זוכה במתנה שווה באמת 🎁<br>(כן כן, מתנה אמיתית — לא רק כבוד ופרסים)</p>
       </div>
       <div class="warning">⚠ אין רמזים. אין רחמים. יש רק QR הבא 😈</div>
       <div class="footer">בהצלחה צוות 😎</div>
@@ -196,18 +195,13 @@ let userMarker = null;
 let routeLine = null;
 
 /* ==== מפה ==== */
-// zoomSnap:0 מאפשר זום שברי כדי שתמונת המפה תמלא בדיוק את המיכל
 const map = L.map('map',{zoomControl:true, attributionControl:true, zoomSnap:0});
-
-// גבולות גאוגרפיים של תמונת המפה — [[דרום, מערב],[צפון, מזרח]]. התאם ערכים אלה כדי שהסמנים ישבו במקום הנכון
 const IMG_BOUNDS = [[32.28985, 34.84230],[32.29210, 34.84455]];
-const raceImage = L.imageOverlay('../../maplast.png', IMG_BOUNDS, {opacity:1}).addTo(map);
+const raceImage = L.imageOverlay('./map_last.PNG', IMG_BOUNDS, {opacity:1}).addTo(map);
 
 L.control.layers(null, { 'תמונת המפה': raceImage }, {position:'topleft'}).addTo(map);
-
 map.setMaxBounds(L.latLngBounds(IMG_BOUNDS).pad(0.2));
 
-// מודד מחדש את גודל המפה ומתאים אותה לגבולות התמונה — נדרש כי המפה נטענת מתחת לקיפול
 function fitMap(){
   map.invalidateSize();
   map.setMinZoom(0);
@@ -257,7 +251,7 @@ function distanceText(s){
   return fmtDist(d);
 }
 function fmtDist(m){ return m<1000 ? Math.round(m)+' מ׳' : (m/1000).toFixed(2)+' ק״מ'; }
-function fmtEta(m){ const min = Math.max(1,Math.round(m/1.35/60)); return min+' דק׳'; } // ~5 קמ"ש
+function fmtEta(m){ const min = Math.max(1,Math.round(m/1.35/60)); return min+' דק׳'; }
 
 function haversine(la1,lo1,la2,lo2){
   const R=6371000, toR=x=>x*Math.PI/180;
@@ -300,7 +294,6 @@ function updateCardStats(s){
   }
 }
 function navUrl(s){
-  // ניווט להליכה מהמיקום הנוכחי של המשתמש אל התחנה
   return `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=walking`;
 }
 
@@ -375,7 +368,6 @@ function closeSidebarMobile(){ if(window.innerWidth<=760) sidebar.classList.remo
 /* ==== תיקון גודל המפה: בטעינה, בשינוי גודל, וכשהמפה נכנסת לתצוגה ==== */
 window.addEventListener('load', fitMap);
 window.addEventListener('resize', fitMap);
-// רענון המפה בכל שינוי גודל בפועל — מטפל במעבר לפריסת flex
 if('ResizeObserver' in window){
   const ro = new ResizeObserver(()=>fitMap());
   ro.observe(document.getElementById('map'));
