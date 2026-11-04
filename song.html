@@ -3,13 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>השיר שלי</title>
+  <meta name="theme-color" content="#7c3aed">
+  <title>ריקוד של קיץ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: #312e51;
+      background:
+        radial-gradient(circle at 15% 20%, #ffe29a 0 7%, transparent 7.5%),
+        radial-gradient(circle at 85% 78%, #ffb8cb 0 9%, transparent 9.5%),
+        linear-gradient(135deg, #f8d7ff, #d9e8ff 55%, #fff0cb);
+    }
+
+    .music-card {
+      width: min(100%, 480px);
+      padding: 40px 30px;
+      text-align: center;
+      background: rgb(255 255 255 / 85%);
+      border: 1px solid rgb(255 255 255 / 90%);
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgb(65 45 110 / 18%);
+      backdrop-filter: blur(8px);
+    }
+
+    .music-icon {
+      width: 96px;
+      height: 96px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      color: white;
+      font-size: 42px;
+      background: linear-gradient(145deg, #a855f7, #ec4899);
+      border-radius: 50%;
+      box-shadow: 0 10px 24px rgb(168 85 247 / 30%);
+    }
+
+    h1 {
+      margin: 0;
+      color: #6d28d9;
+      font-size: clamp(2rem, 8vw, 2.7rem);
+    }
+
+    .subtitle {
+      margin: 12px 0 26px;
+      color: #6b6684;
+      line-height: 1.7;
+    }
+
+    audio {
+      width: 100%;
+    }
+
+    .note {
+      margin-top: 22px;
+      color: #8b849f;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
-  <h1>Lou Bega — Mambo No. 5</h1>
-  <audio controls preload="metadata">
-    <source src="Lou%20Bega%20-%20Mambo%20No.%205%20(A%20Little%20Bit%20of...)%20(1).mp3" type="audio/mpeg">
-    הדפדפן שלך אינו תומך בניגון אודיו.
-  </audio>
+  <main class="music-card">
+    <div class="music-icon" aria-hidden="true">♫</div>
+    <h1>ריקוד של קיץ</h1>
+    <p class="subtitle">רגע של קצב, שמחה ואווירה טובה</p>
+    <audio controls preload="metadata" aria-label="נגן מוזיקה">
+      <source src="Lou%20Bega%20-%20Mambo%20No.%205%20(A%20Little%20Bit%20of...)%20(1).mp3" type="audio/mpeg">
+      הדפדפן שלך אינו תומך בניגון אודיו.
+    </audio>
+    <p class="note">לחצו על נגן המוזיקה כדי להתחיל להאזין</p>
+  </main>
 </body>
 </html>
