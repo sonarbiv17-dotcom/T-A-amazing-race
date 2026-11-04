@@ -80,11 +80,24 @@
     <div class="music-icon" aria-hidden="true">♫</div>
     <h1>ריקוד של קיץ</h1>
     <p class="subtitle">רגע של קצב, שמחה ואווירה טובה</p>
-    <audio controls preload="metadata" aria-label="נגן מוזיקה">
+    <audio id="song" controls preload="metadata" aria-label="נגן מוזיקה">
       <source src="Lou%20Bega%20-%20Mambo%20No.%205%20(A%20Little%20Bit%20of...)%20(1).mp3" type="audio/mpeg">
       הדפדפן שלך אינו תומך בניגון אודיו.
     </audio>
-    <p class="note">לחצו על נגן המוזיקה כדי להתחיל להאזין</p>
+    <p class="note">השיר מתחיל מהשנייה ה־15 · לחצו על הנגן כדי להאזין</p>
   </main>
+  <script>
+    const song = document.getElementById("song");
+    const startAt = 15;
+
+    function setStartTime() {
+      if (Number.isFinite(song.duration) && song.duration > startAt) {
+        song.currentTime = startAt;
+      }
+    }
+
+    song.addEventListener("loadedmetadata", setStartTime, { once: true });
+    setStartTime();
+  </script>
 </body>
 </html>
